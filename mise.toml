@@ -1,0 +1,50 @@
+[tools]
+java = "openjdk-25"
+crystal = "1.18.2"
+
+[vars]
+SPEC_OPTS = "{% if exec(command='(tty -s && echo true) || echo false') == 'true' %}--verbose{% endif %}"
+
+[env]
+_JAVA_OPTIONS = "-DmaxYamlCodePoints=99999999"
+QDRANT_VERSION = "1.12.0"   # release Qdrant épinglée — à mettre à jour consciemment
+
+# --- Génération (machine) ---
+[tasks.generate]
+description = "Generate qdrant-api from the pinned OpenAPI spec"
+run = """
+rm -rf src spec/api spec/models spec/spec_helper.cr
+java -jar openapi-generator-cli.jar generate \
+  -i versions/qdrant-rest.$QDRANT_VERSION.yml \
+  -g crystal -o . \
+  --additional-properties moduleName=Qdrant::Api,shardName=qdrant-api,apiNamespace=
+"""
+
+[tasks.format]
+description = "Format generated code"
+run = "crystal tool format src spec"
+
+[tasks.build]
+description = "Generate + format"
+run = '''
+mise run generate
+mise run format
+'''
+
+# --- Développement (conventions mcp.cr) ---
+[tasks."dev:deps"]
+description = "Install dependencies"
+run = "shards install"
+
+[tasks."dev:spec"]
+description = "Run the generated spec suite"
+run = "crystal spec {{vars.SPEC_OPTS}}"
+
+[tasks."dev:docs"]
+description = "Generate the shard's API documentation into ./docs"
+run = "crystal docs"
+
+# TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+[tasks."dev:fix-shards-command"]
+description = "Fix missing shards command (macOS CI)"
+run = "cp $HOME/.local/share/mise/installs/crystal/{{tools.crystal.version}}/embedded/bin/shards $HOME/.local/share/mise/installs/crystal/{{tools.crystal.version}}/bin/"

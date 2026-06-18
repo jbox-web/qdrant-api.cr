@@ -1,0 +1,13 @@
+/lib/
+/.shards/
+/bin/
+.DS_Store
+/shard.lock
+*.dwarf
+.spectator-failures
+
+# Generator jar — built from the openapi-generator PR branch, not committed
+/openapi-generator-cli.jar
+
+# `crystal docs` output (published to Pages by CI) and internal plan docs
+/docs/
