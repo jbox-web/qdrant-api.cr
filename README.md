@@ -14,6 +14,8 @@ OpenAPI spec via [`openapi-generator`](https://github.com/OpenAPITools/openapi-g
 > [qdrant-client](https://github.com/jbox-web/qdrant-client.cr) instead. This shard
 > is the thin, fully-typed transport layer it builds on.
 
+📖 **[API documentation](https://jbox-web.github.io/qdrant-api.cr)**
+
 ## Features
 
 - **Per-instance** `Client.new(host:)` — no global singleton, multiple clients coexist.
