@@ -1,0 +1,40 @@
+---
+name: regenerate
+
+permissions: {}
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"   # hebdo — détecte un bump amont à ingérer
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Setup mise
+        uses: jdx/mise-action@v4
+      # The crystal generator lives on an unmerged PR branch, so the jar isn't on
+      # Maven and isn't committed. Build it from the fork.
+      # TODO: switch to downloading a released jar once #24070 merges upstream.
+      - name: Build openapi-generator jar from PR branch
+        run: |
+          git clone --depth 1 \
+            --branch crystal/idiomatic-api-redesign \
+            https://github.com/n-rodriguez/openapi-generator.git /tmp/openapi-generator
+          cd /tmp/openapi-generator
+          ./mvnw -q clean package \
+            -pl modules/openapi-generator-cli -am \
+            -DskipTests -Dmaven.javadoc.skip=true
+          cp modules/openapi-generator-cli/target/openapi-generator-cli.jar \
+            "$GITHUB_WORKSPACE/openapi-generator-cli.jar"
+      - name: Regenerate
+        run: mise run build
+      - name: Install dependencies
+        run: mise dev:deps
+      - name: Run tests
+        run: mise dev:spec
