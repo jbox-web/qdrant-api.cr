@@ -1,0 +1,10 @@
+# Fichiers maintenus à la main — ne pas écraser à la génération
+.editorconfig
+.openapi-generator-ignore
+README.md
+LICENSE
+shard.yml
+mise.toml
+.github/**
+.gitignore
+git_push.sh

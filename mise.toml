@@ -1,0 +1,74 @@
+[tools]
+java = "openjdk-25"
+crystal = "1.18.2"
+
+[vars]
+SPEC_OPTS = "{% if exec(command='(tty -s && echo true) || echo false') == 'true' %}--verbose{% endif %}"
+
+[env]
+_JAVA_OPTIONS = "-DmaxYamlCodePoints=99999999"
+QDRANT_VERSION = "1.18.3"   # release Qdrant épinglée — à mettre à jour consciemment
+OPENAPI_GENERATOR_VERSION = "7.24.0"   # release openapi-generator épinglée (crystal generator upstream)
+
+# --- Génération (machine) ---
+# Locally the generator comes from Homebrew (`brew install openapi-generator`);
+# CI has no formula, so it downloads the released jar and points
+# OPENAPI_GENERATOR_CMD at it. Both paths must resolve to the pinned version —
+# the check below fails loudly rather than silently generating different code.
+[tasks.generate]
+description = "Generate qdrant-api from the pinned OpenAPI spec"
+run = """
+set -eu
+gen="${OPENAPI_GENERATOR_CMD:-openapi-generator}"
+found="$($gen version)"
+if [ "$found" != "$OPENAPI_GENERATOR_VERSION" ]; then
+  echo "openapi-generator $found found, but $OPENAPI_GENERATOR_VERSION is pinned in mise.toml" >&2
+  exit 1
+fi
+rm -rf src spec/api spec/models spec/spec_helper.cr
+$gen generate \
+  -i versions/qdrant-rest.$QDRANT_VERSION.yml \
+  -g crystal -o . \
+  --additional-properties moduleName=Qdrant::Api,shardName=qdrant-api,apiNamespace=
+
+# The generator knows nothing about the upstream Qdrant release, so emit it as a
+# constant. Since the shard version is plain SemVer (see .github/workflows/regenerate.yml
+# for why the `+qdrant.<ver>` metadata had to go), this is the only record of which
+# Qdrant version the code was generated from that survives into the consumer's build.
+cat > src/qdrant-api/qdrant_version.cr <<EOF
+module Qdrant::Api
+  # Qdrant release this shard was generated from.
+  QDRANT_VERSION = "$QDRANT_VERSION"
+end
+EOF
+echo 'require "./qdrant-api/qdrant_version"' >> src/qdrant-api.cr
+"""
+
+[tasks.format]
+description = "Format generated code"
+run = "crystal tool format src spec"
+
+[tasks.build]
+description = "Generate + format"
+run = '''
+mise run generate
+mise run format
+'''
+
+# --- Développement (conventions mcp.cr) ---
+[tasks."dev:deps"]
+description = "Install dependencies"
+run = "shards install"
+
+[tasks."dev:spec"]
+description = "Run the generated spec suite"
+run = "crystal spec {{vars.SPEC_OPTS}}"
+
+[tasks."dev:docs"]
+description = "Generate the shard's API documentation into ./docs"
+run = "crystal docs"
+
+# TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+[tasks."dev:fix-shards-command"]
+description = "Fix missing shards command (macOS CI)"
+run = "cp $HOME/.local/share/mise/installs/crystal/{{tools.crystal.version}}/embedded/bin/shards $HOME/.local/share/mise/installs/crystal/{{tools.crystal.version}}/bin/"

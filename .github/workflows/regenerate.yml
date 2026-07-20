@@ -1,0 +1,118 @@
+---
+name: regenerate
+
+# Needs write access to push the regenerated code, the version bump and the tag,
+# and to create the GitHub release.
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"   # hebdo — détecte un bump amont à ingérer
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Setup mise
+        uses: jdx/mise-action@v4
+
+      # No Homebrew formula on the runner: fetch the released jar from Maven Central
+      # and point the mise task at it. The version is pinned in mise.toml, which the
+      # `generate` task cross-checks against whatever generator it ends up running.
+      - name: Fetch openapi-generator jar
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^OPENAPI_GENERATOR_VERSION = "\([^"]*\)".*/\1/p' mise.toml)"
+          curl -sSf --max-time 120 -o /tmp/openapi-generator-cli.jar \
+            "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/${version}/openapi-generator-cli-${version}.jar"
+          echo "OPENAPI_GENERATOR_CMD=java -jar /tmp/openapi-generator-cli.jar" >> "$GITHUB_ENV"
+
+      # Detect the latest Qdrant release. If it moved past the pinned QDRANT_VERSION,
+      # download its OpenAPI spec and bump the pin so the regeneration below targets it.
+      # A generator-only change (same Qdrant version, new jar) is still picked up: the
+      # regenerated code simply differs and triggers a patch release.
+      - name: Sync Qdrant spec
+        id: spec
+        run: |
+          set -euo pipefail
+          old="$(sed -n 's/^QDRANT_VERSION = "\([^"]*\)".*/\1/p' mise.toml)"
+          new="$(gh api repos/qdrant/qdrant/releases/latest --jq .tag_name | sed 's/^v//')"
+          echo "pinned=$old  latest=$new"
+          echo "old_qdrant=$old" >> "$GITHUB_OUTPUT"
+          echo "new_qdrant=$new" >> "$GITHUB_OUTPUT"
+          if [ "$old" != "$new" ]; then
+            curl -sSf --max-time 30 \
+              "https://raw.githubusercontent.com/qdrant/qdrant/v${new}/docs/redoc/master/openapi.json" \
+              -o "versions/qdrant-rest.${new}.yml"
+            sed -i "s/^QDRANT_VERSION = \"[^\"]*\"/QDRANT_VERSION = \"${new}\"/" mise.toml
+            echo "qdrant_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "qdrant_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Regenerate
+        run: mise run build
+
+      - name: Install dependencies
+        run: mise dev:deps
+
+      # Gates the release: if the regenerated shard doesn't compile / specs fail,
+      # the job stops here and nothing is published.
+      - name: Run tests
+        run: mise dev:spec
+
+      # Version scheme: plain SemVer `X.Y.Z`, no build metadata.
+      #   - Qdrant version changed  -> minor bump
+      #   - generator-only change   -> patch bump
+      #   - nothing changed         -> no release
+      #
+      # Build metadata (`X.Y.Z+qdrant.<ver>`) was tried and had to be dropped: shards
+      # cannot consume it at all. Its VERSION_TAG regex rejects `+` in tag names, so
+      # tagged releases are invisible to `version:` constraints; and resolving by
+      # `tag:`/`commit:`/`branch:` appends `+git.commit.<sha>` to the spec version,
+      # producing a two-`+` string it cannot reparse. Both make the shard uninstallable.
+      # The Qdrant version is recorded in the release notes and exposed at runtime as
+      # `Qdrant::Api::QDRANT_VERSION` instead.
+      - name: Version, tag & release
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes after regeneration — nothing to release."
+            exit 0
+          fi
+
+          core="$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' shard.yml)"
+          IFS=. read -r major minor patch <<< "$core"
+          if [ "${{ steps.spec.outputs.qdrant_changed }}" = "true" ]; then
+            minor=$((minor + 1)); patch=0
+          else
+            patch=$((patch + 1))
+          fi
+          qdrant="${{ steps.spec.outputs.new_qdrant }}"
+          version="${major}.${minor}.${patch}"
+          tag="v${version}"
+          echo "Releasing ${tag}"
+
+          sed -i "s/^version: .*/version: ${version}/" shard.yml
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: regenerate against Qdrant ${qdrant} (${tag})"
+          git tag "$tag"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "$tag"
+          gh release create "$tag" \
+            --title "$tag" \
+            --notes "Regenerated against Qdrant \`${qdrant}\` (was \`${{ steps.spec.outputs.old_qdrant }}\`)."

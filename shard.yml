@@ -1,0 +1,23 @@
+name: qdrant-api
+version: 0.1.0
+license: MIT
+
+authors:
+  - Nicolas Rodriguez <nico@nicoladmin.fr>
+
+description: |
+  Low-level Qdrant REST client for Crystal, generated from Qdrant's OpenAPI spec.
+
+crystal: ">= 1.18.0"
+
+dependencies:
+  crest:
+    github: mamantoha/crest
+    version: ~> 1.3.13
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+  spectator:
+    gitlab: arctic-fox/spectator
+    version: ~> 0.12.0
