@@ -18,9 +18,11 @@ module Qdrant::Api
     property direction : ReshardingDirection
 
     # Optional properties
+    # Peer to create the new shard on, or to migrate points away from when scaling down. If not specified, the least loaded peer is picked when scaling up, a peer holding the removed shard when scaling down.
     @[JSON::Field(key: "peer_id", emit_null: false)]
     property peer_id : Int32?
 
+    # Custom shard key to reshard, must already exist. If not specified, shards without a shard key are resharded.
     @[JSON::Field(key: "shard_key", emit_null: false)]
     property shard_key : ShardKey?
 

@@ -22,15 +22,19 @@ module Qdrant::Api
     @[JSON::Field(key: "quantile", emit_null: false)]
     property quantile : Float32?
 
-    # If true - quantized vectors always will be stored in RAM, ignoring the config of main storage
+    # Deprecated: use `memory` instead. If true - quantized vectors always will be stored in RAM, ignoring the config of main storage
     @[JSON::Field(key: "always_ram", emit_null: false)]
     property always_ram : Bool?
+
+    # Memory placement of quantized vectors. Overrides the deprecated `always_ram` flag if both are set. Default: follow the memory placement of the original vector storage.
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
 
     validates(quantile, Float32, true, maximum: 1, minimum: 0.5)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@_type : ScalarType, @quantile : Float32? = nil, @always_ram : Bool? = nil)
+    def initialize(@_type : ScalarType, @quantile : Float32? = nil, @always_ram : Bool? = nil, @memory : Memory? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -49,6 +53,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(_type, quantile, always_ram)
+    def_equals_and_hash(_type, quantile, always_ram, memory)
   end
 end

@@ -32,9 +32,13 @@ module Qdrant::Api
     @[JSON::Field(key: "max_indexing_threads", emit_null: false)]
     property max_indexing_threads : Int32? = 0
 
-    # Store HNSW index on disk. If set to false, index will be stored in RAM. Default: false
+    # Deprecated: use `memory` instead. Store HNSW index on disk. If set to false, index will be stored in RAM. Default: false
     @[JSON::Field(key: "on_disk", emit_null: false)]
     property on_disk : Bool?
+
+    # Memory placement of the HNSW graph. Overrides the deprecated `on_disk` flag if both are set. Default: `cached` (`cold` if `on_disk` is set to true).
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
 
     # Custom M param for hnsw graph built for payload index. If not set, default M will be used.
     @[JSON::Field(key: "payload_m", emit_null: false)]
@@ -52,7 +56,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@m : Int32, @ef_construct : Int32, @full_scan_threshold : Int32, @max_indexing_threads : Int32? = 0, @on_disk : Bool? = nil, @payload_m : Int32? = nil, @inline_storage : Bool? = nil)
+    def initialize(@m : Int32, @ef_construct : Int32, @full_scan_threshold : Int32, @max_indexing_threads : Int32? = 0, @on_disk : Bool? = nil, @memory : Memory? = nil, @payload_m : Int32? = nil, @inline_storage : Bool? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -83,6 +87,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(m, ef_construct, full_scan_threshold, max_indexing_threads, on_disk, payload_m, inline_storage)
+    def_equals_and_hash(m, ef_construct, full_scan_threshold, max_indexing_threads, on_disk, memory, payload_m, inline_storage)
   end
 end

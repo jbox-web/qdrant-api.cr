@@ -34,10 +34,13 @@ module Qdrant::Api
     def initialize(@value : NestedCondition)
     end
 
+    def initialize(@value : SliceCondition)
+    end
+
     # List of classes defined in anyOf (OpenAPI v3)
     def self.openapi_any_of
       [
-        FieldCondition, Filter, HasIdCondition, HasVectorCondition, IsEmptyCondition, IsNullCondition, NestedCondition,
+        FieldCondition, Filter, HasIdCondition, HasVectorCondition, IsEmptyCondition, IsNullCondition, NestedCondition, SliceCondition,
       ]
     end
 
@@ -79,6 +82,10 @@ module Qdrant::Api
         return new(NestedCondition.from_json(json))
       rescue JSON::ParseException | ArgumentError | TypeCastError
       end
+      begin
+        return new(SliceCondition.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
       raise JSON::ParseException.new("`#{json}` doesn't match any schema listed in Condition (anyOf)", 0, 0)
     end
 
@@ -109,6 +116,10 @@ module Qdrant::Api
       end
       begin
         return new(NestedCondition.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(SliceCondition.new(ctx, node))
       rescue YAML::ParseException | ArgumentError | TypeCastError
       end
       raise YAML::ParseException.new("doesn't match any schema listed in Condition (anyOf)", 0, 0)

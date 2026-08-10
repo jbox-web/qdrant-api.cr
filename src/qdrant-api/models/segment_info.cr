@@ -63,6 +63,10 @@ module Qdrant::Api
     @[JSON::Field(key: "num_deleted_deferred_points", emit_null: false)]
     property num_deleted_deferred_points : Int32?
 
+    # Universal I/O backend that payload storage reads files with. Absent if payload storage does not support configurable backends or only supports a single backend type.
+    @[JSON::Field(key: "payload_storage_io_backend", emit_null: false)]
+    property payload_storage_io_backend : IoBackend?
+
     # Internal ID from which points are deferred (hidden from reads). Only set for appendable segments.
     @[JSON::Field(key: "deferred_internal_id", emit_null: false)]
     property deferred_internal_id : Int32?
@@ -81,7 +85,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@uuid : String, @segment_type : SegmentType, @num_vectors : Int32, @num_points : Int32, @num_indexed_vectors : Int32, @num_deleted_vectors : Int32, @vectors_size_bytes : Int32, @payloads_size_bytes : Int32, @ram_usage_bytes : Int32, @disk_usage_bytes : Int32, @is_appendable : Bool, @index_schema : Hash(String, PayloadIndexInfo), @vector_data : Hash(String, VectorDataInfo), @num_deferred_points : Int32? = nil, @num_deleted_deferred_points : Int32? = nil, @deferred_internal_id : Int32? = nil)
+    def initialize(@uuid : String, @segment_type : SegmentType, @num_vectors : Int32, @num_points : Int32, @num_indexed_vectors : Int32, @num_deleted_vectors : Int32, @vectors_size_bytes : Int32, @payloads_size_bytes : Int32, @ram_usage_bytes : Int32, @disk_usage_bytes : Int32, @is_appendable : Bool, @index_schema : Hash(String, PayloadIndexInfo), @vector_data : Hash(String, VectorDataInfo), @num_deferred_points : Int32? = nil, @num_deleted_deferred_points : Int32? = nil, @payload_storage_io_backend : IoBackend? = nil, @deferred_internal_id : Int32? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -130,6 +134,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(uuid, segment_type, num_vectors, num_points, num_deferred_points, num_deleted_deferred_points, num_indexed_vectors, num_deleted_vectors, vectors_size_bytes, payloads_size_bytes, ram_usage_bytes, disk_usage_bytes, is_appendable, index_schema, vector_data, deferred_internal_id)
+    def_equals_and_hash(uuid, segment_type, num_vectors, num_points, num_deferred_points, num_deleted_deferred_points, num_indexed_vectors, num_deleted_vectors, vectors_size_bytes, payloads_size_bytes, ram_usage_bytes, disk_usage_bytes, is_appendable, index_schema, vector_data, payload_storage_io_backend, deferred_internal_id)
   end
 end

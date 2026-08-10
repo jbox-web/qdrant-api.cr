@@ -39,9 +39,13 @@ module Qdrant::Api
     @[JSON::Field(key: "search_pool", emit_null: false)]
     property search_pool : SearchThreadPoolTelemetry?
 
+    # Resource quota this node is enforcing, and whether it is currently over it. The config is whatever this node last persisted, so a peer that missed a consensus update reports what it is actually applying rather than what the cluster agreed on. Absent for a token without global access, which `GET /quotas` requires as well.
+    @[JSON::Field(key: "quota", emit_null: false)]
+    property quota : QuotaTelemetry?
+
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@id : String, @collections : CollectionsTelemetry, @app : AppBuildTelemetry? = nil, @cluster : ClusterTelemetry? = nil, @requests : RequestsTelemetry? = nil, @memory : MemoryTelemetry? = nil, @hardware : HardwareTelemetry? = nil, @search_pool : SearchThreadPoolTelemetry? = nil)
+    def initialize(@id : String, @collections : CollectionsTelemetry, @app : AppBuildTelemetry? = nil, @cluster : ClusterTelemetry? = nil, @requests : RequestsTelemetry? = nil, @memory : MemoryTelemetry? = nil, @hardware : HardwareTelemetry? = nil, @search_pool : SearchThreadPoolTelemetry? = nil, @quota : QuotaTelemetry? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -57,6 +61,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(id, app, collections, cluster, requests, memory, hardware, search_pool)
+    def_equals_and_hash(id, app, collections, cluster, requests, memory, hardware, search_pool, quota)
   end
 end

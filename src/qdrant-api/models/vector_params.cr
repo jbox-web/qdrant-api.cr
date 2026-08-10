@@ -31,9 +31,13 @@ module Qdrant::Api
     @[JSON::Field(key: "quantization_config", emit_null: false)]
     property quantization_config : QuantizationConfig?
 
-    # If true, vectors are served from disk, improving RAM usage at the cost of latency Default: false
+    # Deprecated: use `memory` instead. If true, vectors are served from disk, improving RAM usage at the cost of latency Default: false
     @[JSON::Field(key: "on_disk", emit_null: false)]
     property on_disk : Bool?
+
+    # Memory placement of the original vector storage. Overrides the deprecated `on_disk` flag if both are set. `pinned` is not supported for dense vector storage. Default: `cached` (`cold` if `on_disk` is set to true).
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
 
     # Defines which datatype should be used to represent vectors in the storage. Choosing different datatypes allows to optimize memory usage and performance vs accuracy.  - For `float32` datatype - vectors are stored as single-precision floating point numbers, 4 bytes. - For `float16` datatype - vectors are stored as half-precision floating point numbers, 2 bytes. - For `uint8` datatype - vectors are stored as unsigned 8-bit integers, 1 byte. It expects vector elements to be in range `[0, 255]`. - For `turbo4` datatype - vectors are quantized to 4 bits per element using the TurboQuant algorithm.
     @[JSON::Field(key: "datatype", emit_null: false)]
@@ -46,7 +50,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@size : Int32, @distance : Distance, @hnsw_config : HnswConfigDiff? = nil, @quantization_config : QuantizationConfig? = nil, @on_disk : Bool? = nil, @datatype : Datatype? = nil, @multivector_config : MultiVectorConfig? = nil)
+    def initialize(@size : Int32, @distance : Distance, @hnsw_config : HnswConfigDiff? = nil, @quantization_config : QuantizationConfig? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil, @datatype : Datatype? = nil, @multivector_config : MultiVectorConfig? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -65,6 +69,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(size, distance, hnsw_config, quantization_config, on_disk, datatype, multivector_config)
+    def_equals_and_hash(size, distance, hnsw_config, quantization_config, on_disk, memory, datatype, multivector_config)
   end
 end

@@ -94,13 +94,9 @@ module Qdrant::Api
     @[JSON::Field(key: "max_payload_index_count", emit_null: false)]
     property max_payload_index_count : Int32?
 
-    # Reject memory-consuming update operations when resident memory exceeds this percentage of total RAM (1-100)
+    # Deprecated: use the node-wide quota config instead. Reject memory-consuming update operations when resident memory exceeds this percentage of total RAM (1-100)
     @[JSON::Field(key: "max_resident_memory_percent", emit_null: false)]
     property max_resident_memory_percent : Int32?
-
-    # Reject disk-consuming update operations when the storage filesystem exceeds this percentage of total capacity (1-100)
-    @[JSON::Field(key: "max_disk_usage_percent", emit_null: false)]
-    property max_disk_usage_percent : Int32?
 
     validates(max_query_limit, Int32, true, minimum: 0)
     validates(max_timeout, Int32, true, minimum: 0)
@@ -116,11 +112,10 @@ module Qdrant::Api
     validates(condition_max_size, Int32, true, minimum: 0)
     validates(max_payload_index_count, Int32, true, minimum: 0)
     validates(max_resident_memory_percent, Int32, true, minimum: 0)
-    validates(max_disk_usage_percent, Int32, true, minimum: 0)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@enabled : Bool? = nil, @max_query_limit : Int32? = nil, @max_timeout : Int32? = nil, @unindexed_filtering_retrieve : Bool? = nil, @unindexed_filtering_update : Bool? = nil, @search_max_hnsw_ef : Int32? = nil, @search_allow_exact : Bool? = nil, @search_max_oversampling : Float64? = nil, @upsert_max_batchsize : Int32? = nil, @search_max_batchsize : Int32? = nil, @max_collection_vector_size_bytes : Int32? = nil, @read_rate_limit : Int32? = nil, @write_rate_limit : Int32? = nil, @max_collection_payload_size_bytes : Int32? = nil, @max_points_count : Int32? = nil, @filter_max_conditions : Int32? = nil, @condition_max_size : Int32? = nil, @multivector_config : Hash(String, StrictModeMultivectorOutput)? = nil, @sparse_config : Hash(String, StrictModeSparseOutput)? = nil, @max_payload_index_count : Int32? = nil, @max_resident_memory_percent : Int32? = nil, @max_disk_usage_percent : Int32? = nil)
+    def initialize(@enabled : Bool? = nil, @max_query_limit : Int32? = nil, @max_timeout : Int32? = nil, @unindexed_filtering_retrieve : Bool? = nil, @unindexed_filtering_update : Bool? = nil, @search_max_hnsw_ef : Int32? = nil, @search_allow_exact : Bool? = nil, @search_max_oversampling : Float64? = nil, @upsert_max_batchsize : Int32? = nil, @search_max_batchsize : Int32? = nil, @max_collection_vector_size_bytes : Int32? = nil, @read_rate_limit : Int32? = nil, @write_rate_limit : Int32? = nil, @max_collection_payload_size_bytes : Int32? = nil, @max_points_count : Int32? = nil, @filter_max_conditions : Int32? = nil, @condition_max_size : Int32? = nil, @multivector_config : Hash(String, StrictModeMultivectorOutput)? = nil, @sparse_config : Hash(String, StrictModeSparseOutput)? = nil, @max_payload_index_count : Int32? = nil, @max_resident_memory_percent : Int32? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -169,9 +164,6 @@ module Qdrant::Api
       if (msg = max_resident_memory_percent_validation_error(@max_resident_memory_percent))
         invalid_properties.push(msg)
       end
-      if (msg = max_disk_usage_percent_validation_error(@max_disk_usage_percent))
-        invalid_properties.push(msg)
-      end
       invalid_properties
     end
 
@@ -181,6 +173,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(enabled, max_query_limit, max_timeout, unindexed_filtering_retrieve, unindexed_filtering_update, search_max_hnsw_ef, search_allow_exact, search_max_oversampling, upsert_max_batchsize, search_max_batchsize, max_collection_vector_size_bytes, read_rate_limit, write_rate_limit, max_collection_payload_size_bytes, max_points_count, filter_max_conditions, condition_max_size, multivector_config, sparse_config, max_payload_index_count, max_resident_memory_percent, max_disk_usage_percent)
+    def_equals_and_hash(enabled, max_query_limit, max_timeout, unindexed_filtering_retrieve, unindexed_filtering_update, search_max_hnsw_ef, search_allow_exact, search_max_oversampling, upsert_max_batchsize, search_max_batchsize, max_collection_vector_size_bytes, read_rate_limit, write_rate_limit, max_collection_payload_size_bytes, max_points_count, filter_max_conditions, condition_max_size, multivector_config, sparse_config, max_payload_index_count, max_resident_memory_percent)
   end
 end

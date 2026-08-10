@@ -8,44 +8,64 @@
 
 module Qdrant::Api
   # Different stemming algorithms with their configs.
+  # StemmingAlgorithm (OpenAPI anyOf): a value matching at least one of the listed schemas.
+  # Implemented as a thin wrapper that (de)serialises by trying each member in order
+  # (the first that parses wins), so it transparently handles scalar, array and object members.
   class StemmingAlgorithm
-    include JSON::Serializable
-    include YAML::Serializable
-    include Qdrant::Api::Serializable
-    include Qdrant::Api::Validation
+    getter value
 
-    # Required properties
-    @[JSON::Field(key: "type", emit_null: false)]
-    property _type : Snowball
+    def initialize(@value : DisabledStemmerParams)
+    end
 
-    @[JSON::Field(key: "language", emit_null: false)]
-    property language : SnowballLanguage
+    def initialize(@value : SnowballParams)
+    end
 
-    # List of class defined in allOf (OpenAPI v3)
-    def self.openapi_all_of
+    # List of classes defined in anyOf (OpenAPI v3)
+    def self.openapi_any_of
       [
-        :"SnowballParams",
+        DisabledStemmerParams, SnowballParams,
       ]
     end
 
-    # Initializes the object
-    # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@_type : Snowball, @language : SnowballLanguage)
+    def self.from_json(string_or_io) : self
+      from_json_any(JSON.parse(string_or_io))
     end
 
-    # Show invalid properties with the reasons. Usually used together with valid?
-    # @return Array for valid properties with the reasons
-    def list_invalid_properties
-      invalid_properties = Array(String).new
-      invalid_properties
+    def self.new(pull : JSON::PullParser)
+      from_json_any(JSON::Any.new(pull))
     end
 
-    # Check to see if the all the properties in the model are valid
-    # @return true if the model is valid
-    def valid?
-      list_invalid_properties.empty?
+    def self.from_json_any(data : JSON::Any) : self
+      json = data.to_json
+      begin
+        return new(DisabledStemmerParams.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(SnowballParams.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
+      raise JSON::ParseException.new("`#{json}` doesn't match any schema listed in StemmingAlgorithm (anyOf)", 0, 0)
     end
 
-    def_equals_and_hash(_type, language)
+    def self.new(ctx : YAML::ParseContext, node : YAML::Nodes::Node)
+      begin
+        return new(DisabledStemmerParams.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(SnowballParams.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      raise YAML::ParseException.new("doesn't match any schema listed in StemmingAlgorithm (anyOf)", 0, 0)
+    end
+
+    def to_json(builder : JSON::Builder)
+      @value.to_json(builder)
+    end
+
+    def to_yaml(builder : YAML::Nodes::Builder)
+      @value.to_yaml(builder)
+    end
   end
 end

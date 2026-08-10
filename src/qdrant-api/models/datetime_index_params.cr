@@ -22,9 +22,13 @@ module Qdrant::Api
     @[JSON::Field(key: "is_principal", emit_null: false)]
     property is_principal : Bool?
 
-    # If true, store the index on disk. Default: false.
+    # Deprecated: use `memory` instead. If true, store the index on disk. Default: false.
     @[JSON::Field(key: "on_disk", emit_null: false)]
     property on_disk : Bool?
+
+    # Memory placement of the index. Overrides the deprecated `on_disk` flag if both are set. Default: `pinned` (`cold` if `on_disk` is set to true).
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
 
     # Enable HNSW graph building for this payload field. If true, builds additional HNSW links (Need payload_m > 0). Default: true.
     @[JSON::Field(key: "enable_hnsw", emit_null: false)]
@@ -32,7 +36,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@_type : DatetimeIndexType, @is_principal : Bool? = nil, @on_disk : Bool? = nil, @enable_hnsw : Bool? = nil)
+    def initialize(@_type : DatetimeIndexType, @is_principal : Bool? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil, @enable_hnsw : Bool? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -48,6 +52,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(_type, is_principal, on_disk, enable_hnsw)
+    def_equals_and_hash(_type, is_principal, on_disk, memory, enable_hnsw)
   end
 end

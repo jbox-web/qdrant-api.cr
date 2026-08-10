@@ -64,32 +64,6 @@ module Qdrant::Api
         auth: %w[api-key bearerAuth])
     end
 
-    # Discover points Use context and a target to find the most similar points to the target, constrained by the context. When using only the context (without a target), a special search - called context search - is performed where pairs of points are used to generate a loss that guides the search towards the zone where most positive examples overlap. This means that the score minimizes the scenario of finding a point closer to a negative than to a positive part of a pair. Since the score of a context relates to loss, the maximum score a point can get is 0.0, and it becomes normal that many points can have a score of 0.0. When using target (with or without context), the score behaves a little different: The integer part of the score represents the rank with respect to the context, while the decimal part of the score relates to the distance to the target. The context part of the score for each pair is calculated +1 if the point is closer to a positive than to a negative part of a pair, and -1 otherwise.
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def discover(collection_name : String, discover_request : Qdrant::Api::DiscoverRequest? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchPoints200Response)
-      @conn.request(Qdrant::Api::SearchPoints200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/discover".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: discover_request,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
-    # Discover batch points Look for points based on target and/or positive and negative example pairs, in batch.
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def discover_batch(collection_name : String, discover_request_batch : Qdrant::Api::DiscoverRequestBatch? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchBatchPoints200Response)
-      @conn.request(Qdrant::Api::SearchBatchPoints200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/discover/batch".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: discover_request_batch,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
     # Get point Retrieve full information of single point by id
     def get(collection_name : String, id : Qdrant::Api::ExtendedPointId, *, consistency : Qdrant::Api::ReadConsistency? = nil) : Response(Qdrant::Api::GetPoint200Response)
       @conn.request(Qdrant::Api::GetPoint200Response,
@@ -173,50 +147,11 @@ module Qdrant::Api
     end
 
     # Query points, grouped by a given payload field Universally query points, grouped by a given payload field
-    def query_groups(collection_name : String, query_groups_request : Qdrant::Api::QueryGroupsRequest? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchPointGroups200Response)
-      @conn.request(Qdrant::Api::SearchPointGroups200Response,
+    def query_groups(collection_name : String, query_groups_request : Qdrant::Api::QueryGroupsRequest? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::QueryPointsGroups200Response)
+      @conn.request(Qdrant::Api::QueryPointsGroups200Response,
         method: :POST,
         path: "/collections/{collection_name}/points/query/groups".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
         body: query_groups_request,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
-    # Recommend points Look for the points which are closer to stored positive examples and at the same time further to negative examples.
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def recommend(collection_name : String, recommend_request : Qdrant::Api::RecommendRequest? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchPoints200Response)
-      @conn.request(Qdrant::Api::SearchPoints200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/recommend".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: recommend_request,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
-    # Recommend batch points Look for the points which are closer to stored positive examples and at the same time further to negative examples.
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def recommend_batch(collection_name : String, recommend_request_batch : Qdrant::Api::RecommendRequestBatch? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchBatchPoints200Response)
-      @conn.request(Qdrant::Api::SearchBatchPoints200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/recommend/batch".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: recommend_request_batch,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
-    # Recommend point groups Look for the points which are closer to stored positive examples and at the same time further to negative examples, grouped by a given payload field.
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def recommend_groups(collection_name : String, recommend_groups_request : Qdrant::Api::RecommendGroupsRequest? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchPointGroups200Response)
-      @conn.request(Qdrant::Api::SearchPointGroups200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/recommend/groups".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: recommend_groups_request,
         query: {"consistency" => consistency, "timeout" => timeout},
         accept: %w[application/json],
         content_type: %w[application/json],
@@ -229,45 +164,6 @@ module Qdrant::Api
         method: :POST,
         path: "/collections/{collection_name}/points/scroll".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
         body: scroll_request,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
-    # Search points Retrieve closest points based on vector similarity and given filtering conditions
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def search(collection_name : String, search_request : Qdrant::Api::SearchRequest? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchPoints200Response)
-      @conn.request(Qdrant::Api::SearchPoints200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/search".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: search_request,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
-    # Search batch points Retrieve by batch the closest points based on vector similarity and given filtering conditions
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def search_batch(collection_name : String, search_request_batch : Qdrant::Api::SearchRequestBatch? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchBatchPoints200Response)
-      @conn.request(Qdrant::Api::SearchBatchPoints200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/search/batch".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: search_request_batch,
-        query: {"consistency" => consistency, "timeout" => timeout},
-        accept: %w[application/json],
-        content_type: %w[application/json],
-        auth: %w[api-key bearerAuth])
-    end
-
-    # Search point groups Retrieve closest points based on vector similarity and given filtering conditions, grouped by a given payload field
-    @[Deprecated("This operation is marked deprecated in the OpenAPI spec.")]
-    def search_groups(collection_name : String, search_groups_request : Qdrant::Api::SearchGroupsRequest? = nil, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::SearchPointGroups200Response)
-      @conn.request(Qdrant::Api::SearchPointGroups200Response,
-        method: :POST,
-        path: "/collections/{collection_name}/points/search/groups".sub("{collection_name}", Qdrant::Api.enc(collection_name)),
-        body: search_groups_request,
         query: {"consistency" => consistency, "timeout" => timeout},
         accept: %w[application/json],
         content_type: %w[application/json],

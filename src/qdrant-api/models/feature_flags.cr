@@ -26,13 +26,33 @@ module Qdrant::Api
     @[JSON::Field(key: "appendable_quantization", emit_null: false)]
     property appendable_quantization : Bool? = true
 
-    # Use single-file mmap in-ram vector storage (InRamMmap)  Enabled by default in Qdrant 1.17.1+
+    # Use single-file mmap in-ram vector storage (InRamMmap)  Enabled by default in Qdrant 1.18.3+
     @[JSON::Field(key: "single_file_mmap_vector_storage", emit_null: false)]
-    property single_file_mmap_vector_storage : Bool? = false
+    property single_file_mmap_vector_storage : Bool? = true
+
+    # Allow the io_uring-based payload storage implementation. When disabled, io_uring payload storage is *never* used. When enabled, payload storage backend is decided based on `storage.performance.io_uring` option and payload storage type.
+    @[JSON::Field(key: "async_payload_storage", emit_null: false)]
+    property async_payload_storage : Bool? = true
+
+    # Write a segment manifest (`segments_manifest.json`, next to the `segments/` directory) listing the shard's segments and their state, so out-of-process readers can discover segments without scanning the filesystem.
+    @[JSON::Field(key: "write_segment_manifest", emit_null: false)]
+    property write_segment_manifest : Bool? = false
+
+    # Build new segments in append-only mode: in-place point mutations become clone-and-tombstone appends instead. Intended for testing the append-only storage path.
+    @[JSON::Field(key: "append_only_mutations", emit_null: false)]
+    property append_only_mutations : Bool? = false
+
+    # Persist write-once bitmasks in the compact `StoredBitmask` format instead of raw dense bitslices. Only gates writing: both formats are always readable.
+    @[JSON::Field(key: "compact_bitmask", emit_null: false)]
+    property compact_bitmask : Bool? = false
+
+    # Serverless-compatible deployment mode. Automatically enables [`Self::write_segment_manifest`], [`Self::append_only_mutations`] and [`Self::compact_bitmask`].  Note that this will only be applied when passed into [`init_feature_flags`].
+    @[JSON::Field(key: "serverless_compatible", emit_null: false)]
+    property serverless_compatible : Bool? = false
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = false)
+    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @serverless_compatible : Bool? = false)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -48,6 +68,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage)
+    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage, async_payload_storage, write_segment_manifest, append_only_mutations, compact_bitmask, serverless_compatible)
   end
 end

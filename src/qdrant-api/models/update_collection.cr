@@ -42,7 +42,7 @@ module Qdrant::Api
     @[JSON::Field(key: "strict_mode_config", emit_null: false)]
     property strict_mode_config : StrictModeConfig?
 
-    # Metadata to update for the collection. If provided, this will merge with existing metadata. To remove metadata, set it to an empty object.
+    # Metadata to update for the collection. If provided, this will merge with existing metadata. Individual keys can be removed by setting their value to `null`.
     @[JSON::Field(key: "metadata", emit_null: false)]
     property metadata : Hash(String, JSON::Any)?
 

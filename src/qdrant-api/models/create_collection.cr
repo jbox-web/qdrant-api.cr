@@ -34,9 +34,13 @@ module Qdrant::Api
     @[JSON::Field(key: "write_consistency_factor", emit_null: false)]
     property write_consistency_factor : Int32?
 
-    # If true - point's payload will not be stored in memory. It will be read from the disk every time it is requested. This setting saves RAM by (slightly) increasing the response time. Note: those payload values that are involved in filtering and are indexed - remain in RAM.  Default: true
+    # Deprecated: use `payload.memory` instead. If true - point's payload will not be stored in memory. It will be read from the disk every time it is requested. This setting saves RAM by (slightly) increasing the response time. Note: those payload values that are involved in filtering and are indexed - remain in RAM.  Default: true
     @[JSON::Field(key: "on_disk_payload", emit_null: false)]
     property on_disk_payload : Bool?
+
+    # Configuration of the payload storage
+    @[JSON::Field(key: "payload", emit_null: false)]
+    property payload : PayloadStorageParams?
 
     # Custom params for HNSW index. If none - values from service configuration file are used.
     @[JSON::Field(key: "hnsw_config", emit_null: false)]
@@ -72,7 +76,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = nil, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @on_disk_payload : Bool? = nil, @hnsw_config : HnswConfigDiff? = nil, @wal_config : WalConfigDiff? = nil, @optimizers_config : OptimizersConfigDiff? = nil, @quantization_config : QuantizationConfig? = nil, @sparse_vectors : Hash(String, SparseVectorParams)? = nil, @strict_mode_config : StrictModeConfig? = nil, @metadata : Hash(String, JSON::Any)? = nil)
+    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = nil, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @on_disk_payload : Bool? = nil, @payload : PayloadStorageParams? = nil, @hnsw_config : HnswConfigDiff? = nil, @wal_config : WalConfigDiff? = nil, @optimizers_config : OptimizersConfigDiff? = nil, @quantization_config : QuantizationConfig? = nil, @sparse_vectors : Hash(String, SparseVectorParams)? = nil, @strict_mode_config : StrictModeConfig? = nil, @metadata : Hash(String, JSON::Any)? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -97,6 +101,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, on_disk_payload, hnsw_config, wal_config, optimizers_config, quantization_config, sparse_vectors, strict_mode_config, metadata)
+    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, on_disk_payload, payload, hnsw_config, wal_config, optimizers_config, quantization_config, sparse_vectors, strict_mode_config, metadata)
   end
 end

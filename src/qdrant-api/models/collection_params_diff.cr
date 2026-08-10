@@ -30,9 +30,13 @@ module Qdrant::Api
     @[JSON::Field(key: "read_fan_out_delay_ms", emit_null: false)]
     property read_fan_out_delay_ms : Int32?
 
-    # If true - point's payload will not be stored in memory. It will be read from the disk every time it is requested. This setting saves RAM by (slightly) increasing the response time. Note: those payload values that are involved in filtering and are indexed - remain in RAM.
+    # Deprecated: use `payload.memory` instead. If true - point's payload will not be stored in memory. It will be read from the disk every time it is requested. This setting saves RAM by (slightly) increasing the response time. Note: those payload values that are involved in filtering and are indexed - remain in RAM.
     @[JSON::Field(key: "on_disk_payload", emit_null: false)]
     property on_disk_payload : Bool?
+
+    # Update params of the payload storage. If none - it is left unchanged.
+    @[JSON::Field(key: "payload", emit_null: false)]
+    property payload : PayloadStorageParams?
 
     validates(replication_factor, Int32, true, minimum: 1)
     validates(write_consistency_factor, Int32, true, minimum: 1)
@@ -41,7 +45,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = nil)
+    def initialize(@replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = nil, @payload : PayloadStorageParams? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -69,6 +73,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload)
+    def_equals_and_hash(replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload, payload)
   end
 end

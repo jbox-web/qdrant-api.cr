@@ -14,8 +14,13 @@ module Qdrant::Api
     include Qdrant::Api::Validation
 
     # Optional properties
+    # Deprecated: use `memory` instead.
     @[JSON::Field(key: "always_ram", emit_null: false)]
     property always_ram : Bool?
+
+    # Memory placement of quantized vectors. Overrides the deprecated `always_ram` flag if both are set. Default: follow the memory placement of the original vector storage.
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
 
     @[JSON::Field(key: "encoding", emit_null: false)]
     property encoding : BinaryQuantizationEncoding?
@@ -26,7 +31,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@always_ram : Bool? = nil, @encoding : BinaryQuantizationEncoding? = nil, @query_encoding : BinaryQuantizationQueryEncoding? = nil)
+    def initialize(@always_ram : Bool? = nil, @memory : Memory? = nil, @encoding : BinaryQuantizationEncoding? = nil, @query_encoding : BinaryQuantizationQueryEncoding? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -42,6 +47,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(always_ram, encoding, query_encoding)
+    def_equals_and_hash(always_ram, memory, encoding, query_encoding)
   end
 end

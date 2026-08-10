@@ -27,11 +27,15 @@ module Qdrant::Api
     @[JSON::Field(key: "datatype", emit_null: false)]
     property datatype : VectorStorageDatatype?
 
+    # Requested memory placement of the index.  The structural decision is carried by `index_type`; this field additionally distinguishes `cold` from `cached` for the mmap index variant.
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
+
     validates(full_scan_threshold, Int32, true, minimum: 0)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@index_type : SparseIndexType, @full_scan_threshold : Int32? = nil, @datatype : VectorStorageDatatype? = nil)
+    def initialize(@index_type : SparseIndexType, @full_scan_threshold : Int32? = nil, @datatype : VectorStorageDatatype? = nil, @memory : Memory? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -50,6 +54,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(full_scan_threshold, index_type, datatype)
+    def_equals_and_hash(full_scan_threshold, index_type, datatype, memory)
   end
 end

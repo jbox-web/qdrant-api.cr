@@ -35,11 +35,15 @@ module Qdrant::Api
     @[JSON::Field(key: "acorn", emit_null: false)]
     property acorn : AcornSearchParams?
 
-    validates(hnsw_ef, Int32, true, minimum: 0)
+    # Which population sparse vector IDF statistics are computed over. By default (or with explicit `\"global\"`) statistics are collection-wide. Only applicable to sparse vectors with the IDF modifier enabled.
+    @[JSON::Field(key: "idf", emit_null: false)]
+    property idf : IdfParams?
+
+    validates(hnsw_ef, Int32, true, minimum: 1)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@hnsw_ef : Int32? = nil, @exact : Bool? = false, @quantization : QuantizationSearchParams? = nil, @indexed_only : Bool? = false, @acorn : AcornSearchParams? = nil)
+    def initialize(@hnsw_ef : Int32? = nil, @exact : Bool? = false, @quantization : QuantizationSearchParams? = nil, @indexed_only : Bool? = false, @acorn : AcornSearchParams? = nil, @idf : IdfParams? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -58,6 +62,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(hnsw_ef, exact, quantization, indexed_only, acorn)
+    def_equals_and_hash(hnsw_ef, exact, quantization, indexed_only, acorn, idf)
   end
 end

@@ -62,6 +62,12 @@ module Qdrant::Api
 
     @metrics : Metrics?
 
+    def quotas : Quotas
+      @quotas ||= Quotas.new(@connection)
+    end
+
+    @quotas : Quotas?
+
     def readyz : Readyz
       @readyz ||= Readyz.new(@connection)
     end
@@ -148,6 +154,10 @@ module Qdrant::Api
   end
 
   class Metrics
+    def initialize(@conn : Connection); end
+  end
+
+  class Quotas
     def initialize(@conn : Connection); end
   end
 

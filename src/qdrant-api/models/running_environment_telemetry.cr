@@ -34,9 +34,11 @@ module Qdrant::Api
     @[JSON::Field(key: "cpu_cores_used", emit_null: false)]
     property cpu_cores_used : Float32?
 
+    # Effective total memory for this process in KiB (cgroup limit or host RAM).
     @[JSON::Field(key: "ram_size", emit_null: false)]
     property ram_size : Int32?
 
+    # Size in KiB of the filesystem hosting Qdrant's /storage path (if not available, fallback to host disk size)
     @[JSON::Field(key: "disk_size", emit_null: false)]
     property disk_size : Int32?
 

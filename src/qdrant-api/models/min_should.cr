@@ -20,7 +20,7 @@ module Qdrant::Api
     @[JSON::Field(key: "min_count", emit_null: false)]
     property min_count : Int32
 
-    validates(min_count, Int32, false, minimum: 0)
+    validates(min_count, Int32, false, minimum: 1)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash

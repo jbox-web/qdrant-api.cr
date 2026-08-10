@@ -7,7 +7,7 @@ SPEC_OPTS = "{% if exec(command='(tty -s && echo true) || echo false') == 'true'
 
 [env]
 _JAVA_OPTIONS = "-DmaxYamlCodePoints=99999999"
-QDRANT_VERSION = "1.18.3"   # release Qdrant épinglée — à mettre à jour consciemment
+QDRANT_VERSION = "1.19.0"   # release Qdrant épinglée — à mettre à jour consciemment
 OPENAPI_GENERATOR_VERSION = "7.24.0"   # release openapi-generator épinglée (crystal generator upstream)
 
 # --- Génération (machine) ---

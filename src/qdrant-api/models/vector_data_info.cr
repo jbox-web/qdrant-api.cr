@@ -23,13 +23,18 @@ module Qdrant::Api
     @[JSON::Field(key: "num_deleted_vectors", emit_null: false)]
     property num_deleted_vectors : Int32
 
+    # Optional properties
+    # Universal I/O backend that this vector storage reads files with. Absent if vector storage does not support configurable backends or only supports a single backend type.
+    @[JSON::Field(key: "io_backend", emit_null: false)]
+    property io_backend : IoBackend?
+
     validates(num_vectors, Int32, false, minimum: 0)
     validates(num_indexed_vectors, Int32, false, minimum: 0)
     validates(num_deleted_vectors, Int32, false, minimum: 0)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@num_vectors : Int32, @num_indexed_vectors : Int32, @num_deleted_vectors : Int32)
+    def initialize(@num_vectors : Int32, @num_indexed_vectors : Int32, @num_deleted_vectors : Int32, @io_backend : IoBackend? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -54,6 +59,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(num_vectors, num_indexed_vectors, num_deleted_vectors)
+    def_equals_and_hash(num_vectors, num_indexed_vectors, num_deleted_vectors, io_backend)
   end
 end

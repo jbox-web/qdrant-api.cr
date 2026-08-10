@@ -41,9 +41,13 @@ module Qdrant::Api
     @[JSON::Field(key: "read_fan_out_delay_ms", emit_null: false)]
     property read_fan_out_delay_ms : Int32?
 
-    # If true - point's payload will not be stored in memory. It will be read from the disk every time it is requested. This setting saves RAM by (slightly) increasing the response time. Note: those payload values that are involved in filtering and are indexed - remain in RAM.  Default: true
+    # Deprecated: use `payload.memory` instead. If true - point's payload will not be stored in memory. It will be read from the disk every time it is requested. This setting saves RAM by (slightly) increasing the response time. Note: those payload values that are involved in filtering and are indexed - remain in RAM.  Default: true
     @[JSON::Field(key: "on_disk_payload", emit_null: false)]
     property on_disk_payload : Bool? = true
+
+    # Configuration of the payload storage
+    @[JSON::Field(key: "payload", emit_null: false)]
+    property payload : PayloadStorageParams?
 
     # Configuration of the sparse vector storage
     @[JSON::Field(key: "sparse_vectors", emit_null: false)]
@@ -57,7 +61,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = 1, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = 1, @write_consistency_factor : Int32? = 1, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = true, @sparse_vectors : Hash(String, SparseVectorParams)? = nil)
+    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = 1, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = 1, @write_consistency_factor : Int32? = 1, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = true, @payload : PayloadStorageParams? = nil, @sparse_vectors : Hash(String, SparseVectorParams)? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -88,6 +92,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload, sparse_vectors)
+    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload, payload, sparse_vectors)
   end
 end

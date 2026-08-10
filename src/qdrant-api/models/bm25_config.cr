@@ -30,7 +30,7 @@ module Qdrant::Api
     @[JSON::Field(key: "tokenizer", emit_null: false)]
     property tokenizer : TokenizerType?
 
-    # Defines which language to use for text preprocessing. This parameter is used to construct default stopwords filter and stemmer. To disable language-specific processing, set this to `\"language\": \"none\"`. If not specified, English is assumed.
+    # Defines which language to use for text preprocessing. This parameter is used to construct default stopwords filter and stemmer. To disable language-specific processing, set `stemmer` to `{\"type\": \"none\"}` and configure an empty stopword set. The legacy `\"language\": \"none\"` hack is deprecated and may be rejected in a future release. If not specified, English is assumed.
     @[JSON::Field(key: "language", emit_null: false)]
     property language : String?
 

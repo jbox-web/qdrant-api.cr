@@ -22,13 +22,17 @@ module Qdrant::Api
     @[JSON::Field(key: "quantization_config", emit_null: false)]
     property quantization_config : QuantizationConfigDiff?
 
-    # If true, vectors are served from disk, improving RAM usage at the cost of latency
+    # Deprecated: use `memory` instead. If true, vectors are served from disk, improving RAM usage at the cost of latency
     @[JSON::Field(key: "on_disk", emit_null: false)]
     property on_disk : Bool?
 
+    # Memory placement of the original vector storage. Overrides the deprecated `on_disk` flag if both are set. `pinned` is not supported for dense vector storage.
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
+
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@hnsw_config : HnswConfigDiff? = nil, @quantization_config : QuantizationConfigDiff? = nil, @on_disk : Bool? = nil)
+    def initialize(@hnsw_config : HnswConfigDiff? = nil, @quantization_config : QuantizationConfigDiff? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -44,6 +48,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(hnsw_config, quantization_config, on_disk)
+    def_equals_and_hash(hnsw_config, quantization_config, on_disk, memory)
   end
 end

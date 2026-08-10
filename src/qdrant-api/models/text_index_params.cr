@@ -45,9 +45,13 @@ module Qdrant::Api
     @[JSON::Field(key: "stopwords", emit_null: false)]
     property stopwords : StopwordsInterface?
 
-    # If true, store the index on disk. Default: false.
+    # Deprecated: use `memory` instead. If true, store the index on disk. Default: false.
     @[JSON::Field(key: "on_disk", emit_null: false)]
     property on_disk : Bool?
+
+    # Memory placement of the index. Overrides the deprecated `on_disk` flag if both are set. Default: `pinned` (`cold` if `on_disk` is set to true).
+    @[JSON::Field(key: "memory", emit_null: false)]
+    property memory : Memory?
 
     # Algorithm for stemming. Default: disabled.
     @[JSON::Field(key: "stemmer", emit_null: false)]
@@ -62,7 +66,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@_type : TextIndexType, @tokenizer : TokenizerType? = nil, @min_token_len : Int32? = nil, @max_token_len : Int32? = nil, @lowercase : Bool? = nil, @ascii_folding : Bool? = nil, @phrase_matching : Bool? = nil, @stopwords : StopwordsInterface? = nil, @on_disk : Bool? = nil, @stemmer : StemmingAlgorithm? = nil, @enable_hnsw : Bool? = nil)
+    def initialize(@_type : TextIndexType, @tokenizer : TokenizerType? = nil, @min_token_len : Int32? = nil, @max_token_len : Int32? = nil, @lowercase : Bool? = nil, @ascii_folding : Bool? = nil, @phrase_matching : Bool? = nil, @stopwords : StopwordsInterface? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil, @stemmer : StemmingAlgorithm? = nil, @enable_hnsw : Bool? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -84,6 +88,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(_type, tokenizer, min_token_len, max_token_len, lowercase, ascii_folding, phrase_matching, stopwords, on_disk, stemmer, enable_hnsw)
+    def_equals_and_hash(_type, tokenizer, min_token_len, max_token_len, lowercase, ascii_folding, phrase_matching, stopwords, on_disk, memory, stemmer, enable_hnsw)
   end
 end
