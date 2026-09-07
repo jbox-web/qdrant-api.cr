@@ -21,6 +21,7 @@ spec/models/abort_shard_transfer_spec.cr
 spec/models/abort_transfer_operation_spec.cr
 spec/models/abs_expression_spec.cr
 spec/models/acorn_search_params_spec.cr
+spec/models/acosh_expression_spec.cr
 spec/models/alias_description_spec.cr
 spec/models/alias_operations_spec.cr
 spec/models/any_variants_spec.cr
@@ -75,6 +76,7 @@ spec/models/consensus_thread_status_one_of1_spec.cr
 spec/models/consensus_thread_status_one_of2_spec.cr
 spec/models/consensus_thread_status_one_of_spec.cr
 spec/models/consensus_thread_status_spec.cr
+spec/models/container_runtime_spec.cr
 spec/models/context_input_spec.cr
 spec/models/context_pair_spec.cr
 spec/models/context_query_spec.cr
@@ -214,11 +216,13 @@ spec/models/match_spec.cr
 spec/models/match_text_any_spec.cr
 spec/models/match_text_spec.cr
 spec/models/match_value_spec.cr
+spec/models/max_expression_spec.cr
 spec/models/max_optimization_threads_setting_spec.cr
 spec/models/max_optimization_threads_spec.cr
 spec/models/memory_spec.cr
 spec/models/memory_telemetry_spec.cr
 spec/models/message_send_errors_spec.cr
+spec/models/min_expression_spec.cr
 spec/models/min_should_spec.cr
 spec/models/mmr_spec.cr
 spec/models/model_usage_spec.cr
@@ -486,6 +490,7 @@ src/qdrant-api/models/abort_shard_transfer.cr
 src/qdrant-api/models/abort_transfer_operation.cr
 src/qdrant-api/models/abs_expression.cr
 src/qdrant-api/models/acorn_search_params.cr
+src/qdrant-api/models/acosh_expression.cr
 src/qdrant-api/models/alias_description.cr
 src/qdrant-api/models/alias_operations.cr
 src/qdrant-api/models/any_variants.cr
@@ -540,6 +545,7 @@ src/qdrant-api/models/consensus_thread_status.cr
 src/qdrant-api/models/consensus_thread_status_one_of.cr
 src/qdrant-api/models/consensus_thread_status_one_of1.cr
 src/qdrant-api/models/consensus_thread_status_one_of2.cr
+src/qdrant-api/models/container_runtime.cr
 src/qdrant-api/models/context_input.cr
 src/qdrant-api/models/context_pair.cr
 src/qdrant-api/models/context_query.cr
@@ -679,11 +685,13 @@ src/qdrant-api/models/match_prefix.cr
 src/qdrant-api/models/match_text.cr
 src/qdrant-api/models/match_text_any.cr
 src/qdrant-api/models/match_value.cr
+src/qdrant-api/models/max_expression.cr
 src/qdrant-api/models/max_optimization_threads.cr
 src/qdrant-api/models/max_optimization_threads_setting.cr
 src/qdrant-api/models/memory.cr
 src/qdrant-api/models/memory_telemetry.cr
 src/qdrant-api/models/message_send_errors.cr
+src/qdrant-api/models/min_expression.cr
 src/qdrant-api/models/min_should.cr
 src/qdrant-api/models/mmr.cr
 src/qdrant-api/models/model_usage.cr

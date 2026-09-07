@@ -34,6 +34,10 @@ module Qdrant::Api
     @[JSON::Field(key: "async_payload_storage", emit_null: false)]
     property async_payload_storage : Bool? = true
 
+    # Allow the batched io_uring-based HNSW graph search. When disabled, the HNSW graph is *never* opened on io_uring. When enabled, the graph backend is decided based on `storage.performance.io_uring` option and links placement.
+    @[JSON::Field(key: "async_hnsw_graph", emit_null: false)]
+    property async_hnsw_graph : Bool? = false
+
     # Write a segment manifest (`segments_manifest.json`, next to the `segments/` directory) listing the shard's segments and their state, so out-of-process readers can discover segments without scanning the filesystem.
     @[JSON::Field(key: "write_segment_manifest", emit_null: false)]
     property write_segment_manifest : Bool? = false
@@ -46,13 +50,25 @@ module Qdrant::Api
     @[JSON::Field(key: "compact_bitmask", emit_null: false)]
     property compact_bitmask : Bool? = false
 
-    # Serverless-compatible deployment mode. Automatically enables [`Self::write_segment_manifest`], [`Self::append_only_mutations`] and [`Self::compact_bitmask`].  Note that this will only be applied when passed into [`init_feature_flags`].
+    # Create Blobstore-backed storages (payload storage, appendable field indexes, sparse vectors) in the append-only Logstore mode. Gates creation only: an existing storage keeps its persisted mode, and both modes are always readable.  Implies [`Self::append_only_mutations`], enforced by [`init_feature_flags`].
+    @[JSON::Field(key: "append_only_storages", emit_null: false)]
+    property append_only_storages : Bool? = false
+
+    # Transfer points as storage-native bytes (raw points), for every collection rather than only those whose vector storage would lose precision in a decode-encode round-trip (TurboQuant).  Read on the sending side only, where the transfer batch is prepared: nodes accept raw points regardless.
+    @[JSON::Field(key: "transfer_raw_points", emit_null: false)]
+    property transfer_raw_points : Bool? = false
+
+    # Send the payload of a raw point as the byte blob it is stored as, so the sending node does not parse it and neither node builds a protobuf value tree for it. The receiving node still parses the blob, once, when the operation is applied. Only has an effect on points transferred raw, see [`Self::transfer_raw_points`].  Read on the sending side only: nodes accept raw payloads regardless.
+    @[JSON::Field(key: "transfer_raw_payloads", emit_null: false)]
+    property transfer_raw_payloads : Bool? = false
+
+    # Serverless-compatible deployment mode. Automatically enables [`Self::write_segment_manifest`], [`Self::append_only_mutations`], [`Self::compact_bitmask`] and [`Self::append_only_storages`].  Note that this will only be applied when passed into [`init_feature_flags`].
     @[JSON::Field(key: "serverless_compatible", emit_null: false)]
     property serverless_compatible : Bool? = false
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @serverless_compatible : Bool? = false)
+    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @async_hnsw_graph : Bool? = false, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @append_only_storages : Bool? = false, @transfer_raw_points : Bool? = false, @transfer_raw_payloads : Bool? = false, @serverless_compatible : Bool? = false)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -68,6 +84,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage, async_payload_storage, write_segment_manifest, append_only_mutations, compact_bitmask, serverless_compatible)
+    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage, async_payload_storage, async_hnsw_graph, write_segment_manifest, append_only_mutations, compact_bitmask, append_only_storages, transfer_raw_points, transfer_raw_payloads, serverless_compatible)
   end
 end

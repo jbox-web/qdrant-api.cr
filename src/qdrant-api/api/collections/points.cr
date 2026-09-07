@@ -65,11 +65,11 @@ module Qdrant::Api
     end
 
     # Get point Retrieve full information of single point by id
-    def get(collection_name : String, id : Qdrant::Api::ExtendedPointId, *, consistency : Qdrant::Api::ReadConsistency? = nil) : Response(Qdrant::Api::GetPoint200Response)
+    def get(collection_name : String, id : Qdrant::Api::ExtendedPointId, *, consistency : Qdrant::Api::ReadConsistency? = nil, timeout : Int32? = nil) : Response(Qdrant::Api::GetPoint200Response)
       @conn.request(Qdrant::Api::GetPoint200Response,
         method: :GET,
         path: "/collections/{collection_name}/points/{id}".sub("{collection_name}", Qdrant::Api.enc(collection_name)).sub("{id}", Qdrant::Api.enc(id)),
-        query: {"consistency" => consistency},
+        query: {"consistency" => consistency, "timeout" => timeout},
         accept: %w[application/json],
         auth: %w[api-key bearerAuth])
     end

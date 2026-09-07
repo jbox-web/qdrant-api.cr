@@ -17,6 +17,9 @@ module Qdrant::Api
     @[JSON::Field(key: "is_docker", emit_null: false)]
     property is_docker : Bool
 
+    @[JSON::Field(key: "container_runtime", emit_null: false)]
+    property container_runtime : ContainerRuntime
+
     @[JSON::Field(key: "cpu_flags", emit_null: false)]
     property cpu_flags : String
 
@@ -54,7 +57,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@is_docker : Bool, @cpu_flags : String, @distribution : String? = nil, @distribution_version : String? = nil, @cores : Int32? = nil, @cpu_cores_used : Float32? = nil, @ram_size : Int32? = nil, @disk_size : Int32? = nil, @cpu_endian : CpuEndian? = nil, @gpu_devices : Array(GpuDeviceTelemetry)? = nil)
+    def initialize(@is_docker : Bool, @container_runtime : ContainerRuntime, @cpu_flags : String, @distribution : String? = nil, @distribution_version : String? = nil, @cores : Int32? = nil, @cpu_cores_used : Float32? = nil, @ram_size : Int32? = nil, @disk_size : Int32? = nil, @cpu_endian : CpuEndian? = nil, @gpu_devices : Array(GpuDeviceTelemetry)? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -79,6 +82,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(distribution, distribution_version, is_docker, cores, cpu_cores_used, ram_size, disk_size, cpu_flags, cpu_endian, gpu_devices)
+    def_equals_and_hash(distribution, distribution_version, is_docker, container_runtime, cores, cpu_cores_used, ram_size, disk_size, cpu_flags, cpu_endian, gpu_devices)
   end
 end

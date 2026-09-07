@@ -16,6 +16,9 @@ module Qdrant::Api
     def initialize(@value : AbsExpression)
     end
 
+    def initialize(@value : AcoshExpression)
+    end
+
     def initialize(@value : Condition)
     end
 
@@ -52,6 +55,12 @@ module Qdrant::Api
     def initialize(@value : Log10Expression)
     end
 
+    def initialize(@value : MaxExpression)
+    end
+
+    def initialize(@value : MinExpression)
+    end
+
     def initialize(@value : MultExpression)
     end
 
@@ -73,7 +82,7 @@ module Qdrant::Api
     # List of classes defined in anyOf (OpenAPI v3)
     def self.openapi_any_of
       [
-        AbsExpression, Condition, DatetimeExpression, DatetimeKeyExpression, DivExpression, ExpDecayExpression, ExpExpression, Float32, GaussDecayExpression, GeoDistance, LinDecayExpression, LnExpression, Log10Expression, MultExpression, NegExpression, PowExpression, SqrtExpression, String, SumExpression,
+        AbsExpression, AcoshExpression, Condition, DatetimeExpression, DatetimeKeyExpression, DivExpression, ExpDecayExpression, ExpExpression, Float32, GaussDecayExpression, GeoDistance, LinDecayExpression, LnExpression, Log10Expression, MaxExpression, MinExpression, MultExpression, NegExpression, PowExpression, SqrtExpression, String, SumExpression,
       ]
     end
 
@@ -89,6 +98,10 @@ module Qdrant::Api
       json = data.to_json
       begin
         return new(AbsExpression.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(AcoshExpression.from_json(json))
       rescue JSON::ParseException | ArgumentError | TypeCastError
       end
       begin
@@ -140,6 +153,14 @@ module Qdrant::Api
       rescue JSON::ParseException | ArgumentError | TypeCastError
       end
       begin
+        return new(MaxExpression.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(MinExpression.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
+      begin
         return new(MultExpression.from_json(json))
       rescue JSON::ParseException | ArgumentError | TypeCastError
       end
@@ -169,6 +190,10 @@ module Qdrant::Api
     def self.new(ctx : YAML::ParseContext, node : YAML::Nodes::Node)
       begin
         return new(AbsExpression.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(AcoshExpression.new(ctx, node))
       rescue YAML::ParseException | ArgumentError | TypeCastError
       end
       begin
@@ -217,6 +242,14 @@ module Qdrant::Api
       end
       begin
         return new(Log10Expression.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(MaxExpression.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(MinExpression.new(ctx, node))
       rescue YAML::ParseException | ArgumentError | TypeCastError
       end
       begin

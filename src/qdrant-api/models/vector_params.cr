@@ -46,7 +46,7 @@ module Qdrant::Api
     @[JSON::Field(key: "multivector_config", emit_null: false)]
     property multivector_config : MultiVectorConfig?
 
-    validates(size, Int32, false, minimum: 1)
+    validates(size, Int32, false, maximum: 65536, minimum: 1)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
