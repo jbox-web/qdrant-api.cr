@@ -26,6 +26,9 @@ module Qdrant::Api
     def initialize(@value : MatchPrefix)
     end
 
+    def initialize(@value : MatchSubstring)
+    end
+
     def initialize(@value : MatchText)
     end
 
@@ -38,7 +41,7 @@ module Qdrant::Api
     # List of classes defined in anyOf (OpenAPI v3)
     def self.openapi_any_of
       [
-        MatchAny, MatchExcept, MatchPhrase, MatchPrefix, MatchText, MatchTextAny, MatchValue,
+        MatchAny, MatchExcept, MatchPhrase, MatchPrefix, MatchSubstring, MatchText, MatchTextAny, MatchValue,
       ]
     end
 
@@ -66,6 +69,10 @@ module Qdrant::Api
       end
       begin
         return new(MatchPrefix.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(MatchSubstring.from_json(json))
       rescue JSON::ParseException | ArgumentError | TypeCastError
       end
       begin
@@ -98,6 +105,10 @@ module Qdrant::Api
       end
       begin
         return new(MatchPrefix.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(MatchSubstring.new(ctx, node))
       rescue YAML::ParseException | ArgumentError | TypeCastError
       end
       begin

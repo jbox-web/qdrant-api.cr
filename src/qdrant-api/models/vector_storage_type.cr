@@ -7,7 +7,7 @@
 #
 
 module Qdrant::Api
-  # VectorStorageType (OpenAPI enum). Allowed values: "Memory", "Mmap", "ChunkedMmap", "InRamChunkedMmap", "InRamMmap", "Empty".
+  # VectorStorageType (OpenAPI enum). Allowed values: "Memory", "Mmap", "ChunkedMmap", "InRamChunkedMmap", "InRamMmap", "GraphInline".
   # Represented as `String` so it (de)serialises transparently to/from JSON and YAML,
   # consistent with how inline enums are handled (see the `validates(..., enum: [...])` macro).
   alias VectorStorageType = String

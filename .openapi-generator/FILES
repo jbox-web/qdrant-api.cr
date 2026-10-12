@@ -182,6 +182,7 @@ spec/models/has_vector_condition_spec.cr
 spec/models/hnsw_config_diff_spec.cr
 spec/models/hnsw_config_spec.cr
 spec/models/hnsw_global_config_spec.cr
+spec/models/id_tracker_params_spec.cr
 spec/models/idf_corpus_params_spec.cr
 spec/models/idf_params_spec.cr
 spec/models/idf_scope_spec.cr
@@ -213,6 +214,7 @@ spec/models/match_except_spec.cr
 spec/models/match_phrase_spec.cr
 spec/models/match_prefix_spec.cr
 spec/models/match_spec.cr
+spec/models/match_substring_spec.cr
 spec/models/match_text_any_spec.cr
 spec/models/match_text_spec.cr
 spec/models/match_value_spec.cr
@@ -334,6 +336,8 @@ spec/models/replicate_shard_spec.cr
 spec/models/requests_telemetry_spec.cr
 spec/models/resharding_direction_spec.cr
 spec/models/resharding_info_spec.cr
+spec/models/resharding_stage_spec.cr
+spec/models/resharding_telemetry_spec.cr
 spec/models/restart_transfer_operation_spec.cr
 spec/models/restart_transfer_spec.cr
 spec/models/rrf_query_spec.cr
@@ -651,6 +655,7 @@ src/qdrant-api/models/has_vector_condition.cr
 src/qdrant-api/models/hnsw_config.cr
 src/qdrant-api/models/hnsw_config_diff.cr
 src/qdrant-api/models/hnsw_global_config.cr
+src/qdrant-api/models/id_tracker_params.cr
 src/qdrant-api/models/idf_corpus_params.cr
 src/qdrant-api/models/idf_params.cr
 src/qdrant-api/models/idf_scope.cr
@@ -682,6 +687,7 @@ src/qdrant-api/models/match_any.cr
 src/qdrant-api/models/match_except.cr
 src/qdrant-api/models/match_phrase.cr
 src/qdrant-api/models/match_prefix.cr
+src/qdrant-api/models/match_substring.cr
 src/qdrant-api/models/match_text.cr
 src/qdrant-api/models/match_text_any.cr
 src/qdrant-api/models/match_value.cr
@@ -803,6 +809,8 @@ src/qdrant-api/models/replicate_shard_operation.cr
 src/qdrant-api/models/requests_telemetry.cr
 src/qdrant-api/models/resharding_direction.cr
 src/qdrant-api/models/resharding_info.cr
+src/qdrant-api/models/resharding_stage.cr
+src/qdrant-api/models/resharding_telemetry.cr
 src/qdrant-api/models/restart_transfer.cr
 src/qdrant-api/models/restart_transfer_operation.cr
 src/qdrant-api/models/rrf.cr

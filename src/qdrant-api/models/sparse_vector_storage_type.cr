@@ -7,7 +7,7 @@
 #
 
 module Qdrant::Api
-  # SparseVectorStorageType (OpenAPI enum). Allowed values: "mmap", "empty".
+  # SparseVectorStorageType (OpenAPI enum). Allowed values: "mmap".
   # Represented as `String` so it (de)serialises transparently to/from JSON and YAML,
   # consistent with how inline enums are handled (see the `validates(..., enum: [...])` macro).
   alias SparseVectorStorageType = String

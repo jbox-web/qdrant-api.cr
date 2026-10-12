@@ -42,6 +42,10 @@ module Qdrant::Api
     @[JSON::Field(key: "payload", emit_null: false)]
     property payload : PayloadStorageParams?
 
+    # Configuration of the point id tracker
+    @[JSON::Field(key: "id_tracker", emit_null: false)]
+    property id_tracker : IdTrackerParams?
+
     # Custom params for HNSW index. If none - values from service configuration file are used.
     @[JSON::Field(key: "hnsw_config", emit_null: false)]
     property hnsw_config : HnswConfigDiff?
@@ -76,7 +80,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = nil, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @on_disk_payload : Bool? = nil, @payload : PayloadStorageParams? = nil, @hnsw_config : HnswConfigDiff? = nil, @wal_config : WalConfigDiff? = nil, @optimizers_config : OptimizersConfigDiff? = nil, @quantization_config : QuantizationConfig? = nil, @sparse_vectors : Hash(String, SparseVectorParams)? = nil, @strict_mode_config : StrictModeConfig? = nil, @metadata : Hash(String, JSON::Any)? = nil)
+    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = nil, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @on_disk_payload : Bool? = nil, @payload : PayloadStorageParams? = nil, @id_tracker : IdTrackerParams? = nil, @hnsw_config : HnswConfigDiff? = nil, @wal_config : WalConfigDiff? = nil, @optimizers_config : OptimizersConfigDiff? = nil, @quantization_config : QuantizationConfig? = nil, @sparse_vectors : Hash(String, SparseVectorParams)? = nil, @strict_mode_config : StrictModeConfig? = nil, @metadata : Hash(String, JSON::Any)? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -101,6 +105,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, on_disk_payload, payload, hnsw_config, wal_config, optimizers_config, quantization_config, sparse_vectors, strict_mode_config, metadata)
+    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, on_disk_payload, payload, id_tracker, hnsw_config, wal_config, optimizers_config, quantization_config, sparse_vectors, strict_mode_config, metadata)
   end
 end

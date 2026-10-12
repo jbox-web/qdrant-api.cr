@@ -31,7 +31,7 @@ module Qdrant::Api
     @[JSON::Field(key: "vacuum_min_vector_number", emit_null: false)]
     property vacuum_min_vector_number : Int32? = 1000
 
-    # Do not create segments larger this size (in kilobytes). Large segments might require disproportionately long indexation times, therefore it makes sense to limit the size of segments.  If indexing speed is more important - make this parameter lower. If search speed is more important - make this parameter higher. Note: 1Kb = 1 vector of size 256 If not set, will be automatically selected considering the number of available CPUs.
+    # Do not create segments larger than this size (in kilobytes). Large segments might require disproportionately long indexation times, therefore it makes sense to limit the size of segments.  If indexing speed is more important - make this parameter lower. If search speed is more important - make this parameter higher. Note: 1Kb = 1 vector of size 256 If not set, will be automatically selected considering the number of available CPUs.
     @[JSON::Field(key: "max_segment_size", emit_null: false)]
     property max_segment_size : Int32?
 

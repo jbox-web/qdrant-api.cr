@@ -24,9 +24,13 @@ module Qdrant::Api
     @[JSON::Field(key: "sparse_vector_data", emit_null: false)]
     property sparse_vector_data : Hash(String, SparseVectorDataConfig)?
 
+    # Memory placement of the id tracker in non-appendable segments. Unset means the deployment default: `cold` in serverless-compatible mode, `pinned` otherwise.
+    @[JSON::Field(key: "id_tracker_memory", emit_null: false)]
+    property id_tracker_memory : Memory?
+
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@payload_storage_type : PayloadStorageType, @vector_data : Hash(String, VectorDataConfig)? = nil, @sparse_vector_data : Hash(String, SparseVectorDataConfig)? = nil)
+    def initialize(@payload_storage_type : PayloadStorageType, @vector_data : Hash(String, VectorDataConfig)? = nil, @sparse_vector_data : Hash(String, SparseVectorDataConfig)? = nil, @id_tracker_memory : Memory? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -42,6 +46,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(vector_data, sparse_vector_data, payload_storage_type)
+    def_equals_and_hash(vector_data, sparse_vector_data, payload_storage_type, id_tracker_memory)
   end
 end

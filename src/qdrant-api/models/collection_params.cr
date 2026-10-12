@@ -49,6 +49,10 @@ module Qdrant::Api
     @[JSON::Field(key: "payload", emit_null: false)]
     property payload : PayloadStorageParams?
 
+    # Configuration of the point id tracker
+    @[JSON::Field(key: "id_tracker", emit_null: false)]
+    property id_tracker : IdTrackerParams?
+
     # Configuration of the sparse vector storage
     @[JSON::Field(key: "sparse_vectors", emit_null: false)]
     property sparse_vectors : Hash(String, SparseVectorParams)?
@@ -61,7 +65,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = 1, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = 1, @write_consistency_factor : Int32? = 1, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = true, @payload : PayloadStorageParams? = nil, @sparse_vectors : Hash(String, SparseVectorParams)? = nil)
+    def initialize(@vectors : VectorsConfig? = nil, @shard_number : Int32? = 1, @sharding_method : ShardingMethod? = nil, @replication_factor : Int32? = 1, @write_consistency_factor : Int32? = 1, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = true, @payload : PayloadStorageParams? = nil, @id_tracker : IdTrackerParams? = nil, @sparse_vectors : Hash(String, SparseVectorParams)? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -92,6 +96,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload, payload, sparse_vectors)
+    def_equals_and_hash(vectors, shard_number, sharding_method, replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload, payload, id_tracker, sparse_vectors)
   end
 end

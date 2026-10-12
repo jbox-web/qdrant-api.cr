@@ -38,6 +38,10 @@ module Qdrant::Api
     @[JSON::Field(key: "payload", emit_null: false)]
     property payload : PayloadStorageParams?
 
+    # Update params of the point id tracker. If none - it is left unchanged.
+    @[JSON::Field(key: "id_tracker", emit_null: false)]
+    property id_tracker : IdTrackerParams?
+
     validates(replication_factor, Int32, true, minimum: 1)
     validates(write_consistency_factor, Int32, true, minimum: 1)
     validates(read_fan_out_factor, Int32, true, minimum: 0)
@@ -45,7 +49,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = nil, @payload : PayloadStorageParams? = nil)
+    def initialize(@replication_factor : Int32? = nil, @write_consistency_factor : Int32? = nil, @read_fan_out_factor : Int32? = nil, @read_fan_out_delay_ms : Int32? = nil, @on_disk_payload : Bool? = nil, @payload : PayloadStorageParams? = nil, @id_tracker : IdTrackerParams? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -73,6 +77,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload, payload)
+    def_equals_and_hash(replication_factor, write_consistency_factor, read_fan_out_factor, read_fan_out_delay_ms, on_disk_payload, payload, id_tracker)
   end
 end

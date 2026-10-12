@@ -54,6 +54,10 @@ module Qdrant::Api
     @[JSON::Field(key: "append_only_storages", emit_null: false)]
     property append_only_storages : Bool? = false
 
+    # In non-appendable segments built by the optimizer, store the tracker of an append-only payload storage in the compacted format: read into RAM whole on open instead of one lookup per value. Only has an effect together with [`Self::append_only_storages`]. Gates creation only: both formats are always readable.
+    @[JSON::Field(key: "compact_logstore_tracker", emit_null: false)]
+    property compact_logstore_tracker : Bool? = false
+
     # Transfer points as storage-native bytes (raw points), for every collection rather than only those whose vector storage would lose precision in a decode-encode round-trip (TurboQuant).  Read on the sending side only, where the transfer batch is prepared: nodes accept raw points regardless.
     @[JSON::Field(key: "transfer_raw_points", emit_null: false)]
     property transfer_raw_points : Bool? = false
@@ -62,13 +66,21 @@ module Qdrant::Api
     @[JSON::Field(key: "transfer_raw_payloads", emit_null: false)]
     property transfer_raw_payloads : Bool? = false
 
-    # Serverless-compatible deployment mode. Automatically enables [`Self::write_segment_manifest`], [`Self::append_only_mutations`], [`Self::compact_bitmask`] and [`Self::append_only_storages`].  Note that this will only be applied when passed into [`init_feature_flags`].
+    # Persist proxy segment changes on disk. Prevents pinning the WAL while proxy segments are open. Replays the persisted changes on startup to guarantee data consistency. Required for serverless deployments where storage and compute is separated.
+    @[JSON::Field(key: "persist_proxy_segments", emit_null: false)]
+    property persist_proxy_segments : Bool? = false
+
+    # When `hnsw_config.inline_storage` enabled, use the `GraphInline` vector storage (aka inline-storage without standalone vector storage) for new segments.  Existing `GraphInline` segments are always readable, regardless of this flag.
+    @[JSON::Field(key: "combined_vector_storage", emit_null: false)]
+    property combined_vector_storage : Bool? = true
+
+    # Serverless-compatible deployment mode. Implies [`Self::write_segment_manifest`], [`Self::append_only_mutations`], [`Self::compact_bitmask`], [`Self::append_only_storages`], [`Self::compact_logstore_tracker`] and [`Self::persist_proxy_segments`].  Note that this will only be applied when passed into [`init_feature_flags`].
     @[JSON::Field(key: "serverless_compatible", emit_null: false)]
     property serverless_compatible : Bool? = false
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @async_hnsw_graph : Bool? = false, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @append_only_storages : Bool? = false, @transfer_raw_points : Bool? = false, @transfer_raw_payloads : Bool? = false, @serverless_compatible : Bool? = false)
+    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @async_hnsw_graph : Bool? = false, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @append_only_storages : Bool? = false, @compact_logstore_tracker : Bool? = false, @transfer_raw_points : Bool? = false, @transfer_raw_payloads : Bool? = false, @persist_proxy_segments : Bool? = false, @combined_vector_storage : Bool? = true, @serverless_compatible : Bool? = false)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -84,6 +96,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage, async_payload_storage, async_hnsw_graph, write_segment_manifest, append_only_mutations, compact_bitmask, append_only_storages, transfer_raw_points, transfer_raw_payloads, serverless_compatible)
+    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage, async_payload_storage, async_hnsw_graph, write_segment_manifest, append_only_mutations, compact_bitmask, append_only_storages, compact_logstore_tracker, transfer_raw_points, transfer_raw_payloads, persist_proxy_segments, combined_vector_storage, serverless_compatible)
   end
 end

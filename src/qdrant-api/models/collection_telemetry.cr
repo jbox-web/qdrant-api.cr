@@ -31,7 +31,7 @@ module Qdrant::Api
     property transfers : Array(ShardTransferInfo)?
 
     @[JSON::Field(key: "resharding", emit_null: false)]
-    property resharding : Array(ReshardingInfo)?
+    property resharding : Array(ReshardingTelemetry)?
 
     @[JSON::Field(key: "shard_clean_tasks", emit_null: false)]
     property shard_clean_tasks : Hash(String, ShardCleanStatusTelemetry)?
@@ -40,7 +40,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@id : String, @init_time_ms : Int32? = nil, @config : CollectionConfigTelemetry? = nil, @shards : Array(ReplicaSetTelemetry)? = nil, @transfers : Array(ShardTransferInfo)? = nil, @resharding : Array(ReshardingInfo)? = nil, @shard_clean_tasks : Hash(String, ShardCleanStatusTelemetry)? = nil)
+    def initialize(@id : String, @init_time_ms : Int32? = nil, @config : CollectionConfigTelemetry? = nil, @shards : Array(ReplicaSetTelemetry)? = nil, @transfers : Array(ShardTransferInfo)? = nil, @resharding : Array(ReshardingTelemetry)? = nil, @shard_clean_tasks : Hash(String, ShardCleanStatusTelemetry)? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?

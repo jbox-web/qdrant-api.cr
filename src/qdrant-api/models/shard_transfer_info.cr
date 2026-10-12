@@ -37,7 +37,7 @@ module Qdrant::Api
     @[JSON::Field(key: "method", emit_null: false)]
     property method : ShardTransferMethod?
 
-    # A human-readable report of the transfer progress. Available only on the source peer.
+    # A human-readable report of the transfer progress. Available only on the source peer, and on the target peer during snapshot recovery.
     @[JSON::Field(key: "comment", emit_null: false)]
     property comment : String?
 

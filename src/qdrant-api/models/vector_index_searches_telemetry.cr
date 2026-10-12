@@ -45,9 +45,12 @@ module Qdrant::Api
     @[JSON::Field(key: "index_name", emit_null: false)]
     property index_name : String?
 
+    @[JSON::Field(key: "filtered_acorn", emit_null: false)]
+    property filtered_acorn : OperationDurationStatistics?
+
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@unfiltered_plain : OperationDurationStatistics, @unfiltered_hnsw : OperationDurationStatistics, @unfiltered_sparse : OperationDurationStatistics, @filtered_plain : OperationDurationStatistics, @filtered_small_cardinality : OperationDurationStatistics, @filtered_large_cardinality : OperationDurationStatistics, @filtered_exact : OperationDurationStatistics, @filtered_sparse : OperationDurationStatistics, @unfiltered_exact : OperationDurationStatistics, @index_name : String? = nil)
+    def initialize(@unfiltered_plain : OperationDurationStatistics, @unfiltered_hnsw : OperationDurationStatistics, @unfiltered_sparse : OperationDurationStatistics, @filtered_plain : OperationDurationStatistics, @filtered_small_cardinality : OperationDurationStatistics, @filtered_large_cardinality : OperationDurationStatistics, @filtered_exact : OperationDurationStatistics, @filtered_sparse : OperationDurationStatistics, @unfiltered_exact : OperationDurationStatistics, @index_name : String? = nil, @filtered_acorn : OperationDurationStatistics? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -63,6 +66,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(index_name, unfiltered_plain, unfiltered_hnsw, unfiltered_sparse, filtered_plain, filtered_small_cardinality, filtered_large_cardinality, filtered_exact, filtered_sparse, unfiltered_exact)
+    def_equals_and_hash(index_name, unfiltered_plain, unfiltered_hnsw, unfiltered_sparse, filtered_plain, filtered_small_cardinality, filtered_large_cardinality, filtered_acorn, filtered_exact, filtered_sparse, unfiltered_exact)
   end
 end

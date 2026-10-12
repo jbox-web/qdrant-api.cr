@@ -26,7 +26,7 @@ module Qdrant::Api
     @[JSON::Field(key: "default_segment_number", emit_null: false)]
     property default_segment_number : Int32?
 
-    # Do not create segments larger this size (in kilobytes). Large segments might require disproportionately long indexation times, therefore it makes sense to limit the size of segments.  If indexation speed have more priority for your - make this parameter lower. If search speed is more important - make this parameter higher. Note: 1Kb = 1 vector of size 256
+    # Do not create segments larger than this size (in kilobytes). Large segments might require disproportionately long indexation times, therefore it makes sense to limit the size of segments.  If indexation speed have more priority for your - make this parameter lower. If search speed is more important - make this parameter higher. Note: 1Kb = 1 vector of size 256
     @[JSON::Field(key: "max_segment_size", emit_null: false)]
     property max_segment_size : Int32?
 
