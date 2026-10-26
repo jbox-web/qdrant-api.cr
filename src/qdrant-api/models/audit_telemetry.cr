@@ -29,6 +29,9 @@ module Qdrant::Api
     @[JSON::Field(key: "log_api", emit_null: false)]
     property log_api : Bool
 
+    @[JSON::Field(key: "output", emit_null: false)]
+    property output : String
+
     # Optional properties
     @[JSON::Field(key: "dir_size_bytes", emit_null: false)]
     property dir_size_bytes : Int32?
@@ -38,7 +41,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@dir : String, @rotation : String, @max_log_files : Int32, @trust_forwarded_headers : Bool, @log_api : Bool, @dir_size_bytes : Int32? = nil)
+    def initialize(@dir : String, @rotation : String, @max_log_files : Int32, @trust_forwarded_headers : Bool, @log_api : Bool, @output : String, @dir_size_bytes : Int32? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -60,6 +63,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(dir, rotation, max_log_files, trust_forwarded_headers, log_api, dir_size_bytes)
+    def_equals_and_hash(dir, rotation, max_log_files, trust_forwarded_headers, log_api, output, dir_size_bytes)
   end
 end

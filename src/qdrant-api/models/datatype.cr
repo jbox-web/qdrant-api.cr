@@ -7,7 +7,7 @@
 #
 
 module Qdrant::Api
-  # Datatype (OpenAPI enum). Allowed values: "float32", "uint8", "float16", "turbo4".
+  # Datatype (OpenAPI enum). Allowed values: "float32", "uint8", "float16", "turbo4", "turbo8", "turbo16".
   # Represented as `String` so it (de)serialises transparently to/from JSON and YAML,
   # consistent with how inline enums are handled (see the `validates(..., enum: [...])` macro).
   alias Datatype = String

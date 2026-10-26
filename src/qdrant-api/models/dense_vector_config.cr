@@ -27,7 +27,7 @@ module Qdrant::Api
     @[JSON::Field(key: "multivector_config", emit_null: false)]
     property multivector_config : MultiVectorConfig?
 
-    # Element storage type (Float32, Float16, Uint8, Turbo4)
+    # Element storage type (Float32, Float16, Uint8, Turbo4, Turbo8, Turbo16)
     @[JSON::Field(key: "datatype", emit_null: false)]
     property datatype : VectorStorageDatatype?
 

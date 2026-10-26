@@ -15,7 +15,7 @@ module Qdrant::Api
     include Qdrant::Api::Validation
 
     # Required properties
-    # Number of edges per node in the index graph. Larger the value - more accurate the search, more space required.
+    # Number of edges per node in the index graph. Larger the value - more accurate the search, more space required. Set to 0 to disable the main HNSW graph. Additional payload-aware links may still be built when the effective payload M is positive (see payload_m). This setting alone does not guarantee exact search.
     @[JSON::Field(key: "m", emit_null: false)]
     property m : Int32
 
@@ -40,7 +40,7 @@ module Qdrant::Api
     @[JSON::Field(key: "memory", emit_null: false)]
     property memory : Memory?
 
-    # Custom M param for hnsw graph built for payload index. If not set, default M will be used.
+    # Number of additional payload-aware links per node. If unset, the value of m is used. An effective value of 0 disables these additional links. A positive value allows them for indexed payload fields with HNSW enabled, even when m is 0.
     @[JSON::Field(key: "payload_m", emit_null: false)]
     property payload_m : Int32?
 

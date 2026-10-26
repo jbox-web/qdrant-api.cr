@@ -43,10 +43,13 @@ module Qdrant::Api
     def initialize(@value : SampleQuery)
     end
 
+    def initialize(@value : TextQuery)
+    end
+
     # List of classes defined in anyOf (OpenAPI v3)
     def self.openapi_any_of
       [
-        ContextQuery, DiscoverQuery, FormulaQuery, FusionQuery, NearestQuery, OrderByQuery, RecommendQuery, RelevanceFeedbackQuery, RrfQuery, SampleQuery,
+        ContextQuery, DiscoverQuery, FormulaQuery, FusionQuery, NearestQuery, OrderByQuery, RecommendQuery, RelevanceFeedbackQuery, RrfQuery, SampleQuery, TextQuery,
       ]
     end
 
@@ -100,6 +103,10 @@ module Qdrant::Api
         return new(SampleQuery.from_json(json))
       rescue JSON::ParseException | ArgumentError | TypeCastError
       end
+      begin
+        return new(TextQuery.from_json(json))
+      rescue JSON::ParseException | ArgumentError | TypeCastError
+      end
       raise JSON::ParseException.new("`#{json}` doesn't match any schema listed in Query (anyOf)", 0, 0)
     end
 
@@ -142,6 +149,10 @@ module Qdrant::Api
       end
       begin
         return new(SampleQuery.new(ctx, node))
+      rescue YAML::ParseException | ArgumentError | TypeCastError
+      end
+      begin
+        return new(TextQuery.new(ctx, node))
       rescue YAML::ParseException | ArgumentError | TypeCastError
       end
       raise YAML::ParseException.new("doesn't match any schema listed in Query (anyOf)", 0, 0)

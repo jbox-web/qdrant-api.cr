@@ -7,7 +7,7 @@
 #
 
 module Qdrant::Api
-  # VectorStorageDatatype (OpenAPI enum). Allowed values: "float32", "float16", "uint8", "turbo4".
+  # VectorStorageDatatype (OpenAPI enum). Allowed values: "float32", "float16", "uint8", "turbo4", "turbo8", "turbo16".
   # Represented as `String` so it (de)serialises transparently to/from JSON and YAML,
   # consistent with how inline enums are handled (see the `validates(..., enum: [...])` macro).
   alias VectorStorageDatatype = String

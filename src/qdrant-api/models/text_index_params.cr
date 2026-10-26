@@ -61,12 +61,20 @@ module Qdrant::Api
     @[JSON::Field(key: "enable_hnsw", emit_null: false)]
     property enable_hnsw : Bool?
 
+    # Enable ranking points by BM25 over this field; `true` for the defaults. Changing it rebuilds the index. Default: disabled.
+    @[JSON::Field(key: "scoring", emit_null: false)]
+    property scoring : TextScoringInterface?
+
+    # Index every object of this array as a separate entry, e.g. `offers` for the field `offers[].title`. The field must be inside the array's elements. Every query on the field, not only nested filters, treats each element as its own document: a condition matches a point when a single element matches it, and BM25 scores elements separately. `is_empty` on the field matches a point when one of its elements lacks the field, and never a point without elements. Default: disabled.
+    @[JSON::Field(key: "nested", emit_null: false)]
+    property nested : String?
+
     validates(min_token_len, Int32, true, minimum: 0)
     validates(max_token_len, Int32, true, minimum: 0)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@_type : TextIndexType, @tokenizer : TokenizerType? = nil, @min_token_len : Int32? = nil, @max_token_len : Int32? = nil, @lowercase : Bool? = nil, @ascii_folding : Bool? = nil, @phrase_matching : Bool? = nil, @stopwords : StopwordsInterface? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil, @stemmer : StemmingAlgorithm? = nil, @enable_hnsw : Bool? = nil)
+    def initialize(@_type : TextIndexType, @tokenizer : TokenizerType? = nil, @min_token_len : Int32? = nil, @max_token_len : Int32? = nil, @lowercase : Bool? = nil, @ascii_folding : Bool? = nil, @phrase_matching : Bool? = nil, @stopwords : StopwordsInterface? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil, @stemmer : StemmingAlgorithm? = nil, @enable_hnsw : Bool? = nil, @scoring : TextScoringInterface? = nil, @nested : String? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -88,6 +96,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(_type, tokenizer, min_token_len, max_token_len, lowercase, ascii_folding, phrase_matching, stopwords, on_disk, memory, stemmer, enable_hnsw)
+    def_equals_and_hash(_type, tokenizer, min_token_len, max_token_len, lowercase, ascii_folding, phrase_matching, stopwords, on_disk, memory, stemmer, enable_hnsw, scoring, nested)
   end
 end

@@ -38,9 +38,13 @@ module Qdrant::Api
     @[JSON::Field(key: "prefix", emit_null: false)]
     property prefix : Bool?
 
+    # Index every object of this array as a separate entry, e.g. `offers` for the field `offers[].price`. The field must be inside the array's elements. `is_empty` on the field matches a point when one of its elements lacks the field, and never a point without elements. Default: disabled.
+    @[JSON::Field(key: "nested", emit_null: false)]
+    property nested : String?
+
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@_type : KeywordIndexType, @is_tenant : Bool? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil, @enable_hnsw : Bool? = nil, @prefix : Bool? = nil)
+    def initialize(@_type : KeywordIndexType, @is_tenant : Bool? = nil, @on_disk : Bool? = nil, @memory : Memory? = nil, @enable_hnsw : Bool? = nil, @prefix : Bool? = nil, @nested : String? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -56,6 +60,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(_type, is_tenant, on_disk, memory, enable_hnsw, prefix)
+    def_equals_and_hash(_type, is_tenant, on_disk, memory, enable_hnsw, prefix, nested)
   end
 end

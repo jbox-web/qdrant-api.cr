@@ -7,7 +7,7 @@
 #
 
 module Qdrant::Api
-  # TurboQuantBitSize (OpenAPI enum). Allowed values: "bits1", "bits1_5", "bits2", "bits4".
+  # TurboQuantBitSize (OpenAPI enum). Allowed values: "bits1", "bits1_5", "bits2", "bits4", "bits8".
   # Represented as `String` so it (de)serialises transparently to/from JSON and YAML,
   # consistent with how inline enums are handled (see the `validates(..., enum: [...])` macro).
   alias TurboQuantBitSize = String

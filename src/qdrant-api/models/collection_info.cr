@@ -49,13 +49,17 @@ module Qdrant::Api
     @[JSON::Field(key: "update_queue", emit_null: false)]
     property update_queue : UpdateQueueInfo?
 
+    # Time of the collection creation. Absent for collections created before Qdrant started recording it.
+    @[JSON::Field(key: "created_at", emit_null: false)]
+    property created_at : Time?
+
     validates(indexed_vectors_count, Int32, true, minimum: 0)
     validates(points_count, Int32, true, minimum: 0)
     validates(segments_count, Int32, false, minimum: 0)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@status : CollectionStatus, @optimizer_status : OptimizersStatus, @segments_count : Int32, @config : CollectionConfig, @payload_schema : Hash(String, PayloadIndexInfo), @warnings : Array(CollectionWarning)? = nil, @indexed_vectors_count : Int32? = nil, @points_count : Int32? = nil, @update_queue : UpdateQueueInfo? = nil)
+    def initialize(@status : CollectionStatus, @optimizer_status : OptimizersStatus, @segments_count : Int32, @config : CollectionConfig, @payload_schema : Hash(String, PayloadIndexInfo), @warnings : Array(CollectionWarning)? = nil, @indexed_vectors_count : Int32? = nil, @points_count : Int32? = nil, @update_queue : UpdateQueueInfo? = nil, @created_at : Time? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -80,6 +84,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(status, optimizer_status, warnings, indexed_vectors_count, points_count, segments_count, config, payload_schema, update_queue)
+    def_equals_and_hash(status, optimizer_status, warnings, indexed_vectors_count, points_count, segments_count, config, payload_schema, update_queue, created_at)
   end
 end

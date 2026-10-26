@@ -7,7 +7,7 @@
 #
 
 module Qdrant::Api
-  # TokenizerType (OpenAPI enum). Allowed values: "prefix", "whitespace", "word", "multilingual".
+  # TokenizerType (OpenAPI enum). Allowed values: "prefix", "whitespace", "word", "multilingual", "code".
   # Represented as `String` so it (de)serialises transparently to/from JSON and YAML,
   # consistent with how inline enums are handled (see the `validates(..., enum: [...])` macro).
   alias TokenizerType = String

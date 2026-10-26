@@ -60,11 +60,11 @@ module Qdrant::Api
 
     # Transfer points as storage-native bytes (raw points), for every collection rather than only those whose vector storage would lose precision in a decode-encode round-trip (TurboQuant).  Read on the sending side only, where the transfer batch is prepared: nodes accept raw points regardless.
     @[JSON::Field(key: "transfer_raw_points", emit_null: false)]
-    property transfer_raw_points : Bool? = false
+    property transfer_raw_points : Bool? = true
 
     # Send the payload of a raw point as the byte blob it is stored as, so the sending node does not parse it and neither node builds a protobuf value tree for it. The receiving node still parses the blob, once, when the operation is applied. Only has an effect on points transferred raw, see [`Self::transfer_raw_points`].  Read on the sending side only: nodes accept raw payloads regardless.
     @[JSON::Field(key: "transfer_raw_payloads", emit_null: false)]
-    property transfer_raw_payloads : Bool? = false
+    property transfer_raw_payloads : Bool? = true
 
     # Persist proxy segment changes on disk. Prevents pinning the WAL while proxy segments are open. Replays the persisted changes on startup to guarantee data consistency. Required for serverless deployments where storage and compute is separated.
     @[JSON::Field(key: "persist_proxy_segments", emit_null: false)]
@@ -80,7 +80,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @async_hnsw_graph : Bool? = false, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @append_only_storages : Bool? = false, @compact_logstore_tracker : Bool? = false, @transfer_raw_points : Bool? = false, @transfer_raw_payloads : Bool? = false, @persist_proxy_segments : Bool? = false, @combined_vector_storage : Bool? = true, @serverless_compatible : Bool? = false)
+    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @async_hnsw_graph : Bool? = false, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @append_only_storages : Bool? = false, @compact_logstore_tracker : Bool? = false, @transfer_raw_points : Bool? = true, @transfer_raw_payloads : Bool? = true, @persist_proxy_segments : Bool? = false, @combined_vector_storage : Bool? = true, @serverless_compatible : Bool? = false)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?

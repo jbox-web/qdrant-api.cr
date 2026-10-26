@@ -21,7 +21,7 @@ module Qdrant::Api
     @[JSON::Field(key: "query", emit_null: false)]
     property query : QueryInterface?
 
-    # Define which vector name to use for querying. If missing, the default vector is used.
+    # Define which vector name to use for querying. If missing, the default vector is used. For a `text` query, the payload field whose text index to search.
     @[JSON::Field(key: "using", emit_null: false)]
     property using : String?
 

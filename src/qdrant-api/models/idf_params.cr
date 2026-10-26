@@ -7,7 +7,7 @@
 #
 
 module Qdrant::Api
-  # Population over which sparse vector IDF statistics are computed for scoring — the *IDF corpus*.  - `\"global\"` — collection-wide statistics, same as omitting the parameter. - `{ \"corpus\": <filter> }` — document count and per-term document frequencies are computed over the points matching the corpus filter only. The corpus is independent of the retrieval filter and is usually broader than it.
+  # Population over which IDF statistics are computed for scoring — the *IDF corpus*.  - `\"global\"` — collection-wide statistics, same as omitting the parameter. - `{ \"corpus\": <filter> }` — document count and per-term document frequencies (and, for BM25 over a text index, the average document length) are computed over the points matching the corpus filter only. The corpus is independent of the retrieval filter and is usually broader than it.
   # IdfParams (OpenAPI anyOf): a value matching at least one of the listed schemas.
   # Implemented as a thin wrapper that (de)serialises by trying each member in order
   # (the first that parses wins), so it transparently handles scalar, array and object members.

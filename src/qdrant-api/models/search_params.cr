@@ -35,7 +35,7 @@ module Qdrant::Api
     @[JSON::Field(key: "acorn", emit_null: false)]
     property acorn : AcornSearchParams?
 
-    # Which population sparse vector IDF statistics are computed over. By default (or with explicit `\"global\"`) statistics are collection-wide. Only applicable to sparse vectors with the IDF modifier enabled.
+    # Which population IDF statistics are computed over. By default (or with explicit `\"global\"`) statistics are collection-wide. Only applicable to sparse vectors with the IDF modifier enabled, and to BM25 over a text index.
     @[JSON::Field(key: "idf", emit_null: false)]
     property idf : IdfParams?
 
