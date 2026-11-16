@@ -34,6 +34,10 @@ module Qdrant::Api
     @[JSON::Field(key: "unindexed_filtering_update", emit_null: false)]
     property unindexed_filtering_update : Bool?
 
+    # Require filter-based reads (e.g. search, scroll, count, facet) to restrict results to tenants. Applies only when the collection has a payload index with `is_tenant: true`: the top-level `must` of the request filter must then contain a `match` (`value` or `any`) condition on one of the tenant keys. Reads by point id are not affected.
+    @[JSON::Field(key: "require_tenant_filter", emit_null: false)]
+    property require_tenant_filter : Bool?
+
     # Max HNSW ef value allowed in search parameters.
     @[JSON::Field(key: "search_max_hnsw_ef", emit_null: false)]
     property search_max_hnsw_ef : Int32?
@@ -115,7 +119,7 @@ module Qdrant::Api
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@enabled : Bool? = nil, @max_query_limit : Int32? = nil, @max_timeout : Int32? = nil, @unindexed_filtering_retrieve : Bool? = nil, @unindexed_filtering_update : Bool? = nil, @search_max_hnsw_ef : Int32? = nil, @search_allow_exact : Bool? = nil, @search_max_oversampling : Float64? = nil, @upsert_max_batchsize : Int32? = nil, @search_max_batchsize : Int32? = nil, @max_collection_vector_size_bytes : Int32? = nil, @read_rate_limit : Int32? = nil, @write_rate_limit : Int32? = nil, @max_collection_payload_size_bytes : Int32? = nil, @max_points_count : Int32? = nil, @filter_max_conditions : Int32? = nil, @condition_max_size : Int32? = nil, @multivector_config : Hash(String, StrictModeMultivector)? = nil, @sparse_config : Hash(String, StrictModeSparse)? = nil, @max_payload_index_count : Int32? = nil, @max_resident_memory_percent : Int32? = nil)
+    def initialize(@enabled : Bool? = nil, @max_query_limit : Int32? = nil, @max_timeout : Int32? = nil, @unindexed_filtering_retrieve : Bool? = nil, @unindexed_filtering_update : Bool? = nil, @require_tenant_filter : Bool? = nil, @search_max_hnsw_ef : Int32? = nil, @search_allow_exact : Bool? = nil, @search_max_oversampling : Float64? = nil, @upsert_max_batchsize : Int32? = nil, @search_max_batchsize : Int32? = nil, @max_collection_vector_size_bytes : Int32? = nil, @read_rate_limit : Int32? = nil, @write_rate_limit : Int32? = nil, @max_collection_payload_size_bytes : Int32? = nil, @max_points_count : Int32? = nil, @filter_max_conditions : Int32? = nil, @condition_max_size : Int32? = nil, @multivector_config : Hash(String, StrictModeMultivector)? = nil, @sparse_config : Hash(String, StrictModeSparse)? = nil, @max_payload_index_count : Int32? = nil, @max_resident_memory_percent : Int32? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -173,6 +177,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(enabled, max_query_limit, max_timeout, unindexed_filtering_retrieve, unindexed_filtering_update, search_max_hnsw_ef, search_allow_exact, search_max_oversampling, upsert_max_batchsize, search_max_batchsize, max_collection_vector_size_bytes, read_rate_limit, write_rate_limit, max_collection_payload_size_bytes, max_points_count, filter_max_conditions, condition_max_size, multivector_config, sparse_config, max_payload_index_count, max_resident_memory_percent)
+    def_equals_and_hash(enabled, max_query_limit, max_timeout, unindexed_filtering_retrieve, unindexed_filtering_update, require_tenant_filter, search_max_hnsw_ef, search_allow_exact, search_max_oversampling, upsert_max_batchsize, search_max_batchsize, max_collection_vector_size_bytes, read_rate_limit, write_rate_limit, max_collection_payload_size_bytes, max_points_count, filter_max_conditions, condition_max_size, multivector_config, sparse_config, max_payload_index_count, max_resident_memory_percent)
   end
 end

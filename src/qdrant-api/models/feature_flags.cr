@@ -74,13 +74,21 @@ module Qdrant::Api
     @[JSON::Field(key: "combined_vector_storage", emit_null: false)]
     property combined_vector_storage : Bool? = true
 
-    # Serverless-compatible deployment mode. Implies [`Self::write_segment_manifest`], [`Self::append_only_mutations`], [`Self::compact_bitmask`], [`Self::append_only_storages`], [`Self::compact_logstore_tracker`] and [`Self::persist_proxy_segments`].  Note that this will only be applied when passed into [`init_feature_flags`].
+    # Record the version of every delete, in formats older readers cannot parse: versioned delete entries in appendable mappings logs, and a delete log next to the deleted mask of immutable segments, which takes their deletes in place of the mask. Followers use the versions to never apply the delete of a moved point before they see its new copy. Gates writing only: both formats are always read, and the deletes of an immutable segment are the union of its mask and its log.
+    @[JSON::Field(key: "versioned_deletes", emit_null: false)]
+    property versioned_deletes : Bool? = false
+
+    # Build the main HNSW graph of large segments with PiPNN instead of inserting point by point. When disabled, PiPNN is *never* used and graphs are built with HNSW. When enabled, PiPNN is used where it applies: segments that are large enough, have no older graph to build from, and whose vectors support it. Only changes how graphs are built: the resulting graph has the same format either way.  Disabled by default: PiPNN ignores `ef_construct`, so with it the graph quality of large segments can only be tuned through `m`.
+    @[JSON::Field(key: "pipnn_graph_building", emit_null: false)]
+    property pipnn_graph_building : Bool? = false
+
+    # Serverless-compatible deployment mode. Implies [`Self::write_segment_manifest`], [`Self::append_only_mutations`], [`Self::compact_bitmask`], [`Self::append_only_storages`], [`Self::compact_logstore_tracker`], [`Self::persist_proxy_segments`] and [`Self::versioned_deletes`].  Note that this will only be applied when passed into [`init_feature_flags`].
     @[JSON::Field(key: "serverless_compatible", emit_null: false)]
     property serverless_compatible : Bool? = false
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @async_hnsw_graph : Bool? = false, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @append_only_storages : Bool? = false, @compact_logstore_tracker : Bool? = false, @transfer_raw_points : Bool? = true, @transfer_raw_payloads : Bool? = true, @persist_proxy_segments : Bool? = false, @combined_vector_storage : Bool? = true, @serverless_compatible : Bool? = false)
+    def initialize(@all : Bool? = false, @incremental_hnsw_building : Bool? = true, @appendable_quantization : Bool? = true, @single_file_mmap_vector_storage : Bool? = true, @async_payload_storage : Bool? = true, @async_hnsw_graph : Bool? = false, @write_segment_manifest : Bool? = false, @append_only_mutations : Bool? = false, @compact_bitmask : Bool? = false, @append_only_storages : Bool? = false, @compact_logstore_tracker : Bool? = false, @transfer_raw_points : Bool? = true, @transfer_raw_payloads : Bool? = true, @persist_proxy_segments : Bool? = false, @combined_vector_storage : Bool? = true, @versioned_deletes : Bool? = false, @pipnn_graph_building : Bool? = false, @serverless_compatible : Bool? = false)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -96,6 +104,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage, async_payload_storage, async_hnsw_graph, write_segment_manifest, append_only_mutations, compact_bitmask, append_only_storages, compact_logstore_tracker, transfer_raw_points, transfer_raw_payloads, persist_proxy_segments, combined_vector_storage, serverless_compatible)
+    def_equals_and_hash(all, incremental_hnsw_building, appendable_quantization, single_file_mmap_vector_storage, async_payload_storage, async_hnsw_graph, write_segment_manifest, append_only_mutations, compact_bitmask, append_only_storages, compact_logstore_tracker, transfer_raw_points, transfer_raw_payloads, persist_proxy_segments, combined_vector_storage, versioned_deletes, pipnn_graph_building, serverless_compatible)
   end
 end

@@ -14,39 +14,55 @@ module Qdrant::Api
     include Qdrant::Api::Serializable
     include Qdrant::Api::Validation
 
-    # Required properties
+    # Optional properties
     @[JSON::Field(key: "cpu", emit_null: false)]
-    property cpu : Int32
+    property cpu : Int32?
 
     @[JSON::Field(key: "payload_io_read", emit_null: false)]
-    property payload_io_read : Int32
+    property payload_io_read : Int32?
 
     @[JSON::Field(key: "payload_io_write", emit_null: false)]
-    property payload_io_write : Int32
+    property payload_io_write : Int32?
 
     @[JSON::Field(key: "payload_index_io_read", emit_null: false)]
-    property payload_index_io_read : Int32
+    property payload_index_io_read : Int32?
 
     @[JSON::Field(key: "payload_index_io_write", emit_null: false)]
-    property payload_index_io_write : Int32
+    property payload_index_io_write : Int32?
 
     @[JSON::Field(key: "vector_io_read", emit_null: false)]
-    property vector_io_read : Int32
+    property vector_io_read : Int32?
 
     @[JSON::Field(key: "vector_io_write", emit_null: false)]
-    property vector_io_write : Int32
+    property vector_io_write : Int32?
 
-    validates(cpu, Int32, false, minimum: 0)
-    validates(payload_io_read, Int32, false, minimum: 0)
-    validates(payload_io_write, Int32, false, minimum: 0)
-    validates(payload_index_io_read, Int32, false, minimum: 0)
-    validates(payload_index_io_write, Int32, false, minimum: 0)
-    validates(vector_io_read, Int32, false, minimum: 0)
-    validates(vector_io_write, Int32, false, minimum: 0)
+    @[JSON::Field(key: "remote_io_cached_read", emit_null: false)]
+    property remote_io_cached_read : Int32?
+
+    @[JSON::Field(key: "remote_io_non_cached_read", emit_null: false)]
+    property remote_io_non_cached_read : Int32?
+
+    @[JSON::Field(key: "updated_bytes", emit_null: false)]
+    property updated_bytes : Int32?
+
+    @[JSON::Field(key: "updated_indexed_bytes", emit_null: false)]
+    property updated_indexed_bytes : Int32?
+
+    validates(cpu, Int32, true, minimum: 0)
+    validates(payload_io_read, Int32, true, minimum: 0)
+    validates(payload_io_write, Int32, true, minimum: 0)
+    validates(payload_index_io_read, Int32, true, minimum: 0)
+    validates(payload_index_io_write, Int32, true, minimum: 0)
+    validates(vector_io_read, Int32, true, minimum: 0)
+    validates(vector_io_write, Int32, true, minimum: 0)
+    validates(remote_io_cached_read, Int32, true, minimum: 0)
+    validates(remote_io_non_cached_read, Int32, true, minimum: 0)
+    validates(updated_bytes, Int32, true, minimum: 0)
+    validates(updated_indexed_bytes, Int32, true, minimum: 0)
 
     # Initializes the object
     # @param [Hash] attributes Model attributes in the form of hash
-    def initialize(@cpu : Int32, @payload_io_read : Int32, @payload_io_write : Int32, @payload_index_io_read : Int32, @payload_index_io_write : Int32, @vector_io_read : Int32, @vector_io_write : Int32)
+    def initialize(@cpu : Int32? = nil, @payload_io_read : Int32? = nil, @payload_io_write : Int32? = nil, @payload_index_io_read : Int32? = nil, @payload_index_io_write : Int32? = nil, @vector_io_read : Int32? = nil, @vector_io_write : Int32? = nil, @remote_io_cached_read : Int32? = nil, @remote_io_non_cached_read : Int32? = nil, @updated_bytes : Int32? = nil, @updated_indexed_bytes : Int32? = nil)
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -74,6 +90,18 @@ module Qdrant::Api
       if (msg = vector_io_write_validation_error(@vector_io_write))
         invalid_properties.push(msg)
       end
+      if (msg = remote_io_cached_read_validation_error(@remote_io_cached_read))
+        invalid_properties.push(msg)
+      end
+      if (msg = remote_io_non_cached_read_validation_error(@remote_io_non_cached_read))
+        invalid_properties.push(msg)
+      end
+      if (msg = updated_bytes_validation_error(@updated_bytes))
+        invalid_properties.push(msg)
+      end
+      if (msg = updated_indexed_bytes_validation_error(@updated_indexed_bytes))
+        invalid_properties.push(msg)
+      end
       invalid_properties
     end
 
@@ -83,6 +111,6 @@ module Qdrant::Api
       list_invalid_properties.empty?
     end
 
-    def_equals_and_hash(cpu, payload_io_read, payload_io_write, payload_index_io_read, payload_index_io_write, vector_io_read, vector_io_write)
+    def_equals_and_hash(cpu, payload_io_read, payload_io_write, payload_index_io_read, payload_index_io_write, vector_io_read, vector_io_write, remote_io_cached_read, remote_io_non_cached_read, updated_bytes, updated_indexed_bytes)
   end
 end

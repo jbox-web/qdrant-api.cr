@@ -17,7 +17,7 @@ module Qdrant::Api
     @[JSON::Field(key: "origin", emit_null: false)]
     property origin : GeoPoint
 
-    # Payload field with the destination geo point
+    # Payload field with the destination geo point. If the field holds several geo points, the distance to the nearest one is used
     @[JSON::Field(key: "to", emit_null: false)]
     property to : String
 
